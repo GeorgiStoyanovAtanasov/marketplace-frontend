@@ -1,5 +1,7 @@
-package com.example.demo;
+package com.example.demo.clients;
 
+import com.example.demo.dtos.EventDTO;
+import com.example.demo.IndividualFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

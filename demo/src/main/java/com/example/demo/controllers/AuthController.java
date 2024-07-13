@@ -1,8 +1,11 @@
-package com.example.demo;
+package com.example.demo.controllers;
 
+import com.example.demo.dtos.LoginUserDto;
+import com.example.demo.dtos.RegisterUserDto;
+import com.example.demo.clients.AuthClient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.bouncycastle.math.raw.Mod;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.net.HttpURLConnection;
-
 @Controller
 public class AuthController {
     private final AuthClient authClient;
@@ -21,6 +22,20 @@ public class AuthController {
     @Autowired
     public AuthController(AuthClient authClient){
         this.authClient = authClient;
+    }
+
+    @GetMapping("/user/register")
+    public String registerForm(Model model){
+        model.addAttribute("userRegister", new RegisterUserDto());
+        return "user/register";
+    }
+    @PostMapping("/user/register")
+    public String register(@Valid @ModelAttribute RegisterUserDto registerUserDto){
+        if(!(registerUserDto.getPassword().equals(registerUserDto.getConfirmPassword()))){
+            return "redirect:/user/register";
+        }
+        authClient.register(registerUserDto);
+        return "redirect:/authentication/login";
     }
 
     @GetMapping("/authentication/login")

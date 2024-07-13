@@ -1,6 +1,7 @@
-package com.example.demo;
+package com.example.demo.dtos;
 
 
+import com.example.demo.EventStatus;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;

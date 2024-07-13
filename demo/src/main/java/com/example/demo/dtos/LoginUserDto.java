@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.dtos;
 
 public class LoginUserDto {
     private String email;
