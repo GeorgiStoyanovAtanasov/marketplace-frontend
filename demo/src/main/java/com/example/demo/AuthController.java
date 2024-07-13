@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.net.HttpURLConnection;
 
@@ -26,7 +29,7 @@ public class AuthController {
         return "login";
     }
     @PostMapping("/authentication/login")
-    public String createSession(@ModelAttribute LoginUserDto loginUserDto, HttpSession httpSession, Model model){
+    public String createSession(@ModelAttribute LoginUserDto loginUserDto, HttpSession httpSession){
         try {
 //bez tova dava to many redirects error
             java.net.CookieManager cm = new java.net.CookieManager();
@@ -39,5 +42,15 @@ public class AuthController {
         } catch (Exception e){
             return "redirect:/authentication/login";
         }
+    }
+
+    @PostMapping("/logout")
+    public String logout(){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        HttpSession session = request.getSession(false);
+
+        session.removeAttribute("session");
+        return "redirect:/authentication/login";
     }
 }
