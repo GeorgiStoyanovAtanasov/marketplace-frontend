@@ -34,7 +34,7 @@ public class EventController {
 
         return "all-events";
     }
-    @GetMapping("/{eventName}")
+    @GetMapping("/details/{eventName}")
     public String getEventDetails(@PathVariable String eventName, Model model) {
         return Optional.ofNullable(eventService.getEventDetails(eventName))
                 .map(eventDTO -> {
