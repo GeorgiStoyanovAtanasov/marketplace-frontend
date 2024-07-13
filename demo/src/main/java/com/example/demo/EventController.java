@@ -1,11 +1,18 @@
 package com.example.demo;
 
+import jdk.jfr.Event;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class EventController {
@@ -22,10 +29,19 @@ public class EventController {
         List<EventDTO> events = eventService.getAllEvents();
         List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
 
-        model.addAttribute("events", events);
-        model.addAttribute("eventTypes", eventTypes);
+        model.addAttribute("allEvents", events);
+        model.addAttribute("allTypes", eventTypes);
 
         return "all-events";
+    }
+    @GetMapping("/{eventName}")
+    public String getEventDetails(@PathVariable String eventName, Model model) {
+        return Optional.ofNullable(eventService.getEventDetails(eventName))
+                .map(eventDTO -> {
+                    model.addAttribute("event", eventDTO);
+                    return "event-details";
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
     }
 }
 
