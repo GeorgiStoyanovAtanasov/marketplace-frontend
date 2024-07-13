@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 
@@ -32,6 +34,16 @@ public class EventService {
             return (List<EventTypeDTO>) response.get("eventTypes");
         } catch (RestClientException e) {
             throw new RuntimeException("Error fetching event types from API", e);
+        }
+    }
+    public EventDTO getEventDetails(String eventName) {
+        ResponseEntity<Map<String, EventDTO>> responseEntity = eventClient.getEventDetails(eventName);
+        Map<String, EventDTO> response = responseEntity.getBody();
+
+        if (response != null && response.containsKey("event")) {
+            return response.get("event");
+        } else {
+            return null;
         }
     }
 }
