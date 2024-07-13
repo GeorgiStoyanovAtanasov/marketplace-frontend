@@ -35,3 +35,13 @@ _
 /src/main/java/com/example/demo/EventStatus.java,2\e\2e812004790da3748559cc6750192cfacd1b7161
 c
 3src/main/java/com/example/demo/DemoApplication.java,7\1\7171df7c024808a26040ea210fc78aec82a83023
+^
+.src/main/java/com/example/demo/AuthClient.java,6\3\630f65dc4ff79c5057f0766a199bbe9ee80b163a
+b
+2src/main/java/com/example/demo/AuthController.java,4\8\4876cacd84193a8a91fd118556b68aa173c54a07
+`
+0src/main/java/com/example/demo/LoginUserDto.java,8\f\8fad115d54c663a8faa12072c17040e42f7e6656
+j
+:src/main/java/com/example/demo/FeignClientInterceptor.java,0\c\0c67a77b8e2714b7aef908ab066a3dccab9486b1
+i
+9src/main/java/com/example/demo/IndividualFeignConfig.java,9\c\9ccb7cd8e4d2ff9afa57bf715a0ca2683dce5778

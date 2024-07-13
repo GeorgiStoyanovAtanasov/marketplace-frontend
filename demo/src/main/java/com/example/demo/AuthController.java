@@ -20,22 +20,24 @@ public class AuthController {
         this.authClient = authClient;
     }
 
-    @GetMapping("/login")
+    @GetMapping("/authentication/login")
     public String login(Model model){
         model.addAttribute("loginUser", new LoginUserDto());
         return "login";
     }
-    @PostMapping("/login")
-    public String createSession(@ModelAttribute LoginUserDto loginUserDto, HttpSession httpSession){
+    @PostMapping("/authentication/login")
+    public String createSession(@ModelAttribute LoginUserDto loginUserDto, HttpSession httpSession, Model model){
+        try {
 //bez tova dava to many redirects error
-        java.net.CookieManager cm = new java.net.CookieManager();
-        java.net.CookieHandler.setDefault(cm);
+            java.net.CookieManager cm = new java.net.CookieManager();
+            java.net.CookieHandler.setDefault(cm);
 
-        String token = authClient.authenticate(loginUserDto).getBody().getToken();
+            String token = authClient.authenticate(loginUserDto).getBody().getToken();
+            httpSession.setAttribute("session", token);
 
-        httpSession.setAttribute("session", token);
-
-        return "redirect:/events";
+            return "redirect:/events";
+        } catch (Exception e){
+            return "redirect:/authentication/login";
+        }
     }
-
 }

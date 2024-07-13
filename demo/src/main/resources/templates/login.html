@@ -72,7 +72,7 @@
                     <h3 class="text-center mb-0">Login</h3>
                 </div>
                 <div class="card-body">
-                    <form action="#" th:action="@{/login}" method="post" th:object="${loginUser}">
+                    <form action="#" th:action="@{/authentication/login}" method="post" th:object="${loginUser}">
                         <div class="form-group">
                             <label for="username">Email</label>
                             <input type="text" class="form-control bg-info" id="username" placeholder="Enter email"
