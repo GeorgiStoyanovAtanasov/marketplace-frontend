@@ -16,6 +16,7 @@ public class EventDTO {
     private int duration;
     @NotEmpty(message = "Please enter description!")
     private String description;
+    private String image;
     @NotEmpty(message = "Please enter the place of the event!")
     private String place;
     @NotEmpty(message = "Please enter the start time of the event!")
@@ -27,6 +28,7 @@ public class EventDTO {
     private MultipartFile file;
     private OrganisationDTO organisationDTO;
     private EventTypeDTO eventTypeDTO;
+    private EventStatus eventStatus;
 
     public EventDTO() {
     }
@@ -122,5 +124,24 @@ public class EventDTO {
         this.eventTypeDTO = eventTypeDTO;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setEventTypeDTO(EventTypeDTO eventTypeDTO) {
+        this.eventTypeDTO = eventTypeDTO;
+    }
+
+    public EventStatus getEventStatus() {
+        return eventStatus;
+    }
+
+    public void setEventStatus(EventStatus eventStatus) {
+        this.eventStatus = eventStatus;
+    }
 }
 

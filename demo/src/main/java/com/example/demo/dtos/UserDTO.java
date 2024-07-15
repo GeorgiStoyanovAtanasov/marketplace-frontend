@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 public class UserDTO {
-
     @NotEmpty(message = "Username cannot be empty!")
     @Size(min = 4, max = 20, message = "USername should be between 4 and 20")
     private String username;
@@ -19,9 +18,10 @@ public class UserDTO {
     @Size(min = 6, max = 20, message = "Password should be between 6 and 20")
     private String password;
     @NotEmpty(message = "Please confirm the password!")
-    @Size(min =6, max = 20, message = "Password should be between 6 and 20")
+    @Size(min = 6, max = 20, message = "Password should be between 6 and 20")
     private String confirmPassword;
-    public UserDTO(){
+
+    public UserDTO() {
 
     }
 
@@ -81,7 +81,6 @@ public class UserDTO {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
-
 
 
 }

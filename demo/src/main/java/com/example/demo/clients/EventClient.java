@@ -15,7 +15,7 @@ import java.util.Map;
 public interface EventClient {
     @GetMapping("/all")
     ResponseEntity<Map<String, List<?>>> getEventsAndTypes();
-    @GetMapping("/details/{eventName}")
+    @GetMapping("/{eventName}")
     ResponseEntity<Map<String, EventDTO>> getEventDetails(@PathVariable String eventName);
 }
 
