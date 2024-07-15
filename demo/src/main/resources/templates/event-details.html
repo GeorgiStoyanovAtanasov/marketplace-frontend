@@ -51,23 +51,29 @@
                             <strong>Description:</strong> <span th:text="${event.description}"></span><br>
                             <strong>Ticket price:</strong> <span th:text="${event.ticketPrice}"></span><br>
                             <strong>Capacity:</strong> <span th:text="${event.capacity}"></span><br>
-                            <strong>Organisation:</strong> <span th:text="${event.organisation.organisationName}"></span><br>
-                            <strong>Event type:</strong> <span th:text="${event.eventType.typeName}"></span><br>
+                            <strong>Organisation:</strong> <span th:text="${event.organisationDTO.name}"></span><br>
+                            <strong>Event type:</strong> <span th:text="${event.eventTypeDTO.typeName}"></span><br>
                             <strong>Status:</strong> <span th:text="${event.eventStatus}"></span>
                         </div>
                     </div>
                 </div>
                 <div class="btn-container">
-                    <a class="btn btn-primary" sec:authorize="hasAuthority('Admin')" th:href="@{'/event/update?id=' + ${event.id}}">Update</a>
-                    <form action="#" sec:authorize="hasAuthority('Admin')" th:action="@{'/event/delete?id=' + ${event.id}}" method="post">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                    <form th:unless="${alreadyApplied}" action="#" class="btn btn-primary" sec:authorize="hasAuthority('User')" th:action="@{/event/apply}" method="post">
-                        <input type="hidden" name="eventId" th:value="${event.id}"/>
-                        <button type="submit" class="btn btn-success">Apply</button>
-                    </form>
-                    <p th:if="${alreadyApplied}" th:text="${alreadyApplied}"></p>
-                    <p th:if="${successfullyApplied}" th:text="${successfullyApplied}"></p>
+                    <!-- Check if roles contain 'Admin', 'ADMIN', or 'ROLE_ADMIN' -->
+                    <div th:if="${roles.contains('Admin') || roles.contains('ADMIN') || roles.contains('ROLE_ADMIN')}">
+                        <a class="btn btn-primary" th:href="@{'/events'}">Update</a>
+                        <form action="#" th:action="@{'/events'}" method="post">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                    <div th:if="${roles.contains('User') || roles.contains('USER') || roles.contains('ROLE_USER') || roles.contains('Admin') || roles.contains('ADMIN') || roles.contains('ROLE_ADMIN')}">
+                        <form th:unless="${alreadyApplied}" action="#" class="btn btn-primary"
+                              th:action="@{/event/apply}" method="post">
+                            <input type="hidden" name="eventName" th:value="${event.name}"/>
+                            <button type="submit" class="btn btn-success">Apply</button>
+                        </form>
+                        <p th:if="${alreadyApplied}" th:text="${alreadyApplied}"></p>
+                        <p th:if="${successfullyApplied}" th:text="${successfullyApplied}"></p>
+                    </div>
                 </div>
             </div>
         </div>
