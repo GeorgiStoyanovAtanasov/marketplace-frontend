@@ -4,6 +4,7 @@ import com.example.demo.dtos.EventDTO;
 import com.example.demo.IndividualFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +28,8 @@ public interface EventClient {
             @RequestParam(name = "minPrice", required = false) Double minPrice,
             @RequestParam(name = "maxPrice", required = false) Double maxPrice
     );
+    @DeleteMapping("/delete")
+    void deleteEvent(@RequestParam("name") String name);
 }
 
 

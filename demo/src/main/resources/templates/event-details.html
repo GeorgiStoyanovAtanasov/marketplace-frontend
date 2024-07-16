@@ -61,7 +61,7 @@
                     <!-- Check if roles contain 'Admin', 'ADMIN', or 'ROLE_ADMIN' -->
                     <div th:if="${roles.contains('Admin') || roles.contains('ADMIN') || roles.contains('ROLE_ADMIN')}">
                         <a class="btn btn-primary" th:href="@{'/events'}">Update</a>
-                        <form action="#" th:action="@{'/events'}" method="post">
+                        <form action="#" th:action="@{'/delete/'  + ${event.name}}" method="post">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </div>
