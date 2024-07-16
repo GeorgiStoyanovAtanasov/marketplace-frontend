@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,6 +55,25 @@ public class EventController {
             model.addAttribute("allTypes", eventTypes);
 
 
+            return "all-events";
+        } catch(FeignException.Forbidden e){
+            return "redirect:/authentication/login";
+        }
+    }
+    @GetMapping("/search")
+    public String getFilteredEvents(@RequestParam(name = "name", required = false) String name,
+                                    @RequestParam(name = "place", required = false) String place,
+                                    @RequestParam(name = "type", required = false) Integer type,
+                                    @RequestParam(name = "date", required = false) String date,
+                                    @RequestParam(name = "minPrice", required = false) Double minPrice,
+                                    @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+                                    Model model){
+        try{
+            List<EventDTO> events = eventService.getFilteredEvents(name, place, type, date, minPrice, maxPrice);
+            List<EventTypeDTO> eventTypes = eventService.getFilteredEventTypes(name, place, type, date, minPrice, maxPrice);
+
+            model.addAttribute("allEvents", events);
+            model.addAttribute("allTypes", eventTypes);
             return "all-events";
         } catch(FeignException.Forbidden e){
             return "redirect:/authentication/login";

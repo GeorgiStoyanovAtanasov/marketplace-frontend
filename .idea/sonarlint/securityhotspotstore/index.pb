@@ -34,10 +34,4 @@ h
 K
 .github/workflows/build.yml,f\e\fe77d5d1439f26e353a42bbd38dece2467ff6558
 `
-0src/main/java/com/example/demo/dtos/UserDTO.java,7\e\7e59db829c5f381909f5bcc8c38f6dc1265c9f3d
-h
-8src/main/java/com/example/demo/Services/RoleService.java,c\4\c4ee1147af25370c84478b3d41992ae302c149f3
-a
-1src/main/java/com/example/demo/dtos/EventDTO.java,e\8\e8db08031a5713e44c982b28946fdc2c3e8ba6f2
-<
-build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
+0src/main/java/com/example/demo/EventService.java,4\7\47ddc96dd29aee48142bf7fb2ed6fa37e9ae123a
