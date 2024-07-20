@@ -106,15 +106,14 @@ public class EventController {
 
     @PostMapping("/apply/{id}")
     public String applyToEvent(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        //try {
-        String token = authService.getToken();
-            eventClient.apply(id, token);
+        try {
+            eventClient.apply(id);
          return "redirect:/events";
-//        } catch (RuntimeException e) {
-//            // Add any attributes to be used after redirection if needed
-//            redirectAttributes.addFlashAttribute("errorMessage", "Failed to apply for the event.");
-//            return "redirect:/events";
-//        }
+        } catch (RuntimeException e) {
+            // Add any attributes to be used after redirection if needed
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to apply for the event.");
+            return "redirect:/events";
+        }
     }
 }
 

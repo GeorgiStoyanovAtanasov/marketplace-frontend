@@ -28,7 +28,7 @@ public interface EventClient {
     @DeleteMapping("/delete")
     void deleteEvent(@RequestParam("name") String name);
     @PostMapping("/apply")
-    void apply(@RequestParam(name = "id") Integer id, @RequestParam(name = "token") String token);
+    void apply(@RequestParam(name = "id") Integer id);
 }
 
 
