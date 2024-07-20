@@ -44,6 +44,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="event-info">
+                            <strong>ID:</strong> <span th:text="${event.id}"></span><br>
                             <strong>Date:</strong> <span th:text="${event.date}"></span><br>
                             <strong>Place:</strong> <span th:text="${event.place}"></span><br>
                             <strong>Starting time:</strong> <span th:text="${event.time}"></span><br>
@@ -66,9 +67,7 @@
                         </form>
                     </div>
                     <div th:if="${roles.contains('User') || roles.contains('USER') || roles.contains('ROLE_USER') || roles.contains('Admin') || roles.contains('ADMIN') || roles.contains('ROLE_ADMIN')}">
-                        <form th:unless="${alreadyApplied}" action="#" class="btn btn-primary"
-                              th:action="@{/event/apply}" method="post">
-                            <input type="hidden" name="eventName" th:value="${event.name}"/>
+                        <form th:unless="${alreadyApplied}" class="btn btn-primary" th:action="@{'/apply/' + ${event.id}}" method="post">
                             <button type="submit" class="btn btn-success">Apply</button>
                         </form>
                         <p th:if="${alreadyApplied}" th:text="${alreadyApplied}"></p>
