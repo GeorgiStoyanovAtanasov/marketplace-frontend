@@ -4,10 +4,7 @@ import com.example.demo.dtos.EventDTO;
 import com.example.demo.IndividualFeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +27,8 @@ public interface EventClient {
     );
     @DeleteMapping("/delete")
     void deleteEvent(@RequestParam("name") String name);
+    @PostMapping("/apply")
+    void apply(@RequestParam(name = "id") Integer id, @RequestParam(name = "token") String token);
 }
 
 

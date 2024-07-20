@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,10 +54,11 @@ public class EventController {
 
 
             return "all-events";
-        } catch(FeignException.Forbidden e){
+        } catch (FeignException.Forbidden e) {
             return "redirect:/authentication/login";
         }
     }
+
     @GetMapping("/search")
     public String getFilteredEvents(@RequestParam(name = "name", required = false) String name,
                                     @RequestParam(name = "place", required = false) String place,
@@ -64,25 +66,26 @@ public class EventController {
                                     @RequestParam(name = "date", required = false) String date,
                                     @RequestParam(name = "minPrice", required = false) Double minPrice,
                                     @RequestParam(name = "maxPrice", required = false) Double maxPrice,
-                                    Model model){
-        try{
+                                    Model model) {
+        try {
             List<EventDTO> events = eventService.getFilteredEvents(name, place, type, date, minPrice, maxPrice);
             List<EventTypeDTO> eventTypes = eventService.getFilteredEventTypes(name, place, type, date, minPrice, maxPrice);
 
             model.addAttribute("allEvents", events);
             model.addAttribute("allTypes", eventTypes);
             return "all-events";
-        } catch(FeignException.Forbidden e){
+        } catch (FeignException.Forbidden e) {
             return "redirect:/authentication/login";
         }
     }
+
     @GetMapping("/details/{eventName}")
     public String getEventDetails(@PathVariable String eventName, Model model) {
         return Optional.ofNullable(eventService.getEventDetails(eventName))
                 .map(eventDTO -> {
                     String token = authService.getToken();
                     List<String> roles = userClient.getRoles(token).getBody();
-                    if(roles != null){
+                    if (roles != null) {
                         model.addAttribute("roles", roles);
                     }
                     model.addAttribute("event", eventDTO);
@@ -90,14 +93,29 @@ public class EventController {
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
     }
+
     @PostMapping("/delete/{eventName}")
-    public String deleteEventByName(@PathVariable String eventName, Model model){
+    public String deleteEventByName(@PathVariable String eventName, Model model) {
         try {
             eventClient.deleteEvent(eventName);
             return "redirect:/events";
-        } catch(FeignException.Forbidden e){
+        } catch (FeignException.Forbidden e) {
             return "redirect:/authentication/login";
         }
     }
+
+    @PostMapping("/apply/{id}")
+    public String applyToEvent(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        //try {
+        String token = authService.getToken();
+            eventClient.apply(id, token);
+         return "redirect:/events";
+//        } catch (RuntimeException e) {
+//            // Add any attributes to be used after redirection if needed
+//            redirectAttributes.addFlashAttribute("errorMessage", "Failed to apply for the event.");
+//            return "redirect:/events";
+//        }
+    }
 }
+
 
