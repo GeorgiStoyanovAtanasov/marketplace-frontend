@@ -13,7 +13,7 @@ public interface AuthClient {
 
     @PostMapping("/login")
     ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto);
-    @PostMapping("/register")
+    @PostMapping("/register/user")
     void register(@RequestBody RegisterUserDto registerUserDto);
 
 }

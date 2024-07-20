@@ -9,24 +9,131 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
-        }
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    font-family: Arial, sans-serif;
+}
 
-        .login-container {
-            max-width: 400px;
-            margin: 0 auto;
-            margin-top: 100px;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
-        }
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.login-form {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-form h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.forgot-password {
+    display: block;
+    margin-top: 10px;
+    color: #555;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.social-login {
+    margin-top: 20px;
+}
+
+.social-login p {
+    margin: 10px 0;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.social-buttons .btn {
+    width: auto;
+    padding: 10px 20px;
+    border-radius: 50px;
+}
+
+.social-buttons .btn.facebook {
+    background: #3b5998;
+}
+
+.social-buttons .btn.twitter {
+    background: #1da1f2;
+}
+
+.social-buttons .btn.google {
+    background: #db4437;
+}
+
+.signup-link {
+    margin-top: 20px;
+}
+
+.signup-link a {
+    color: #6e8efb;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
     </style>
 </head>
 
 <body>
-<div class="container">
-    <div class="login-container">
+<div class="login-container">
+    <div class="login-form">
         <h2 class="text-center mb-4">Login</h2>
         <form action="#" th:action="@{/authentication/login}" method="post" th:object="${loginUser}">
             <div class="form-group">
@@ -38,7 +145,7 @@
                 <input type="password" class="form-control" id="password" placeholder="Password"
                        th:field="*{password}">
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
+            <button type="submit" class="btn">Login</button>
             <a class="btn btn-warning btn-block mt-3" href="/user/register">Sign Up</a>
         </form>
     </div>
