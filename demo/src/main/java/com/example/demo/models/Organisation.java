@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class Organisation {
     private Integer id;
-    private String organisationName;
+    private String name;
 }
 
