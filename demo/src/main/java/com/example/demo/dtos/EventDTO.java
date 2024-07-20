@@ -2,6 +2,7 @@ package com.example.demo.dtos;
 
 
 import com.example.demo.EventStatus;
+import com.example.demo.models.Organisation;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -28,7 +29,7 @@ public class EventDTO {
     @NotNull(message = "Please enter the capacity of the event!")
     private int capacity;
     private MultipartFile file;
-    private OrganisationDTO organisationDTO;
+    private Organisation organisation;
     private EventTypeDTO eventTypeDTO;
     private EventStatus eventStatus;
 
