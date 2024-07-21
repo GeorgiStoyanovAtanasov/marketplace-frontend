@@ -5,11 +5,13 @@ import com.example.demo.EventStatus;
 import com.example.demo.models.Organisation;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 @Data
+@AllArgsConstructor
 public class EventDTO {
     private Integer id;
     @NotEmpty(message = "The name of the event can not be empty!")
@@ -32,7 +34,7 @@ public class EventDTO {
     private Organisation organisation;
     private EventTypeDTO eventTypeDTO;
     private EventStatus eventStatus;
-
+    List<UserDTO>users;
 
 }
 
