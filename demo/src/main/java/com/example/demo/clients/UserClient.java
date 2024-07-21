@@ -16,5 +16,7 @@ public interface UserClient {
 
     @GetMapping("/roles")
     ResponseEntity<List<String>> getRoles(@RequestParam("token") String token);
+    @GetMapping("/email")
+    ResponseEntity<String> getEmail();
 }
 

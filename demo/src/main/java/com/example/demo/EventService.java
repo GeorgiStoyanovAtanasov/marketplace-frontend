@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.clients.EventClient;
+import com.example.demo.clients.UserClient;
 import com.example.demo.dtos.EventDTO;
 import com.example.demo.dtos.EventTypeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,12 @@ import java.util.Map;
 public class EventService {
 
     private final EventClient eventClient;
+    private final UserClient userClient;
 
     @Autowired
-    public EventService(EventClient eventClient) {
+    public EventService(EventClient eventClient, UserClient userClient) {
         this.eventClient = eventClient;
+        this.userClient = userClient;
     }
 
     public List<EventDTO> getAllEvents() {
@@ -75,5 +78,16 @@ public class EventService {
         } else {
             return null;
         }
+    }
+    public boolean isUserOnEvent(EventDTO eventDTO){
+        boolean isUserOnEvent = false;
+        String userEmail = userClient.getEmail().getBody();
+        for (int i = 0; i < eventDTO.getUsers().size(); i++) {
+            if (eventDTO.getUsers().get(i).getEmail().equals(userEmail)) {
+                isUserOnEvent = true;
+                break;
+            }
+        }
+        return isUserOnEvent;
     }
 }
