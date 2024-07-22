@@ -24,7 +24,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 public class EventController {
 
     private final EventService eventService;
