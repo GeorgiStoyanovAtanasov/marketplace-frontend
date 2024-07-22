@@ -58,20 +58,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="btn-container">
+                <div class="btn-container mt-3">
                     <!-- Check if roles contain 'Admin', 'ADMIN', or 'ROLE_ADMIN' -->
                     <div th:if="${roles.contains('Admin') || roles.contains('ADMIN') || roles.contains('ROLE_ADMIN')}">
                         <a class="btn btn-primary" th:href="@{'/events'}">Update</a>
-                        <form action="#" th:action="@{'/delete/'  + ${event.name}}" method="post">
+                        <form action="#" th:action="@{'/delete/'  + ${event.name}}" method="post"
+                              style="display:inline;">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </div>
                     <div th:if="${roles.contains('User') || roles.contains('USER') || roles.contains('ROLE_USER') || roles.contains('Admin') || roles.contains('ADMIN') || roles.contains('ROLE_ADMIN')}">
-                        <form th:unless="${alreadyApplied}" class="btn btn-primary" th:action="@{'/apply/' + ${event.id}}" method="post">
-                            <button type="submit" class="btn btn-success">Apply</button>
+                        <form th:unless="${alreadyApplied}" th:action="@{'/apply/' + ${event.id}}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-primary" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px;">Apply</button>
                         </form>
-                        <p th:if="${alreadyApplied}" th:text="${alreadyApplied}"></p>
-                        <p th:if="${successfullyApplied}" th:text="${successfullyApplied}"></p>
+                        <p th:if="${alreadyApplied}" th:text="'You have already applied for this event.'" style="color: red;"></p>
                     </div>
                 </div>
             </div>

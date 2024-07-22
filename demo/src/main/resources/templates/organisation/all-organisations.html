@@ -58,7 +58,7 @@
             </thead>
             <tbody>
             <tr th:each="organisation : ${allOrganisations}">
-                <td th:text="${organisation.organisationName}"></td>
+                <td th:text="${organisation.name}"></td>
                 <td class="text-center">
                     <a class="btn btn-primary" th:href="@{'/organisation/update?id=' + ${organisation.id}}"
                        role="button">Update</a>

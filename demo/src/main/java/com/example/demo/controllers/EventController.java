@@ -88,6 +88,7 @@ public class EventController {
                     if (roles != null) {
                         model.addAttribute("roles", roles);
                     }
+                        model.addAttribute("alreadyApplied", eventService.isUserOnEvent(eventDTO));
                     model.addAttribute("event", eventDTO);
                     return "event-details";
                 })
