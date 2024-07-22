@@ -2,8 +2,10 @@ package com.example.demo.clients;
 
 import com.example.demo.dtos.EventDTO;
 import com.example.demo.IndividualFeignConfig;
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Map;
 public interface EventClient {
     @GetMapping("/all")
     ResponseEntity<Map<String, List<?>>> getEventsAndTypes();
+
     @GetMapping("/{eventName}")
     ResponseEntity<Map<String, EventDTO>> getEventDetails(@PathVariable String eventName);
     @GetMapping("/search")
@@ -29,6 +32,8 @@ public interface EventClient {
     void deleteEvent(@RequestParam("name") String name);
     @PostMapping("/apply")
     void apply(@RequestParam(name = "id") Integer id);
+    @PostMapping("/submit")
+    public void postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult);
 }
 
 
