@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 @Data
-@AllArgsConstructor
 public class EventDTO {
     private Integer id;
     @NotEmpty(message = "The name of the event can not be empty!")
