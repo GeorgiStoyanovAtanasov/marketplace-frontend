@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "user-service", url = "http://localhost:8080/users", configuration = IndividualFeignConfig.class)
+@FeignClient(name = "user-service", url = "${user-service.url}", configuration = IndividualFeignConfig.class)
 public interface UserClient {
 
     @GetMapping("/roles")

@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  api_service:
+  apiservice:
     image: mirkitobtw/marketplace-image
     restart: always
     ports:
@@ -12,7 +12,7 @@ services:
     depends_on:
       - mysqldb
     volumes:
-      - .m2:/root/.m2
+      - ./pgdata:/var/lib/postgresql/data
 
   frontend:
     image: mirkitobtw/marketplace-frontend-image
@@ -22,9 +22,11 @@ services:
     networks:
       - springapimysql-net
     depends_on:
-      - api_service
+      - apiservice
+    environment:
+      - API_PORT=apiservice:8080
     volumes:
-      - .m2:/root/.m2
+      - ./pgdata:/var/lib/postgresql/data
 
   mysqldb:
     image: mysql:8
@@ -36,5 +38,9 @@ services:
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
       - MYSQL_DATABASE=marketplace-api
+
+volumes:
+  pgdata:
+
 networks:
   springapimysql-net:
