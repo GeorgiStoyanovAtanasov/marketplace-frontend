@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 //@FeignClient(name = "event-service", url = "http://localhost:8080/event")
 
-@FeignClient(name = "event-service", url = "http://localhost:8080/event", configuration = IndividualFeignConfig.class)
+@FeignClient(name = "event-service", url = "${event-service.url}", configuration = IndividualFeignConfig.class)
 public interface EventClient {
     @GetMapping("/all")
     ResponseEntity<Map<String, List<?>>> getEventsAndTypes();
