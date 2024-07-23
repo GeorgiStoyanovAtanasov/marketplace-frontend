@@ -51,9 +51,9 @@ public class EventController {
             List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
 
 
-//            String token = authService.getToken();
-//            List<String> roles = userClient.getRoles(token).getBody();
-//            model.addAttribute("roles", roles);
+            String token = authService.getToken();
+            List<String> roles = userClient.getRoles(token).getBody();
+            model.addAttribute("roles", roles);
             model.addAttribute("allEvents", events);
             model.addAttribute("allTypes", eventTypes);
 
