@@ -67,15 +67,14 @@ public class EventController {
     @GetMapping("/add")
     public String addEvent(Model model) {
         List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
-        Iterable<Organisation> organisations = (Iterable<Organisation>) organisationClient.allOrganisations();
         model.addAttribute("eventDTO", new EventDTO());
-        model.addAttribute("eventTypes", eventTypes);
-        model.addAttribute("organisations",organisations);
+        model.addAttribute("allTypes", eventTypes);
+        model.addAttribute("organisations",organisationClient.allOrganisations().getBody());
         return "event/event-form";
     }
 
-    @PostMapping("/submit")
-    public String postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult, Model model) throws ParseException {
+    @PostMapping("/event/submit")
+    public String postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors()) {
             return "event/event-form";
 //        if (eventService.errorEventStatus(eventDTO)) {
