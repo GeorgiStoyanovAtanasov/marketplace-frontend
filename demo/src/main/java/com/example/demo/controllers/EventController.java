@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,14 +75,18 @@ public class EventController {
     }
 
     @PostMapping("/event/submit")
-    public String postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult, Model model){
+    public String postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult, Model model,@RequestParam(value = "organisationId", required = false) Integer organisationId){
+
         if (bindingResult.hasErrors()) {
+            List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
+            model.addAttribute("allTypes", eventTypes);
+            model.addAttribute("organisations",organisationClient.allOrganisations().getBody());
             return "event/event-form";
 //        if (eventService.errorEventStatus(eventDTO)) {
 //            model.addAttribute("notValidDate", "Please enter a valid date!");
 //            return "event-form";
         } else {
-            eventClient.postEvent(eventDTO, bindingResult);
+            eventClient.postEvent(eventDTO);
             return "redirect:/events";
         }
     }

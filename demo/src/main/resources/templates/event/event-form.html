@@ -72,19 +72,17 @@
             </div>
             <div class="form-group">
               Organisation:
-              <select th:field="*{organisation}">
-                <option th:each="organisation : ${organisations}" th:value="${organisation.id}" th:text="${organisation.name}" class="form-control"></option>
+              <p th:each="organisation : ${organisations}">
+                <input type="radio" th:value="${organisation.id}" th:text="${organisation.name}" name="organisationId">
                 <span th:if="${#fields.hasErrors('organisation')}" th:errors="*{organisation}"></span>
-              </select>
               </p>
             </div>
             <div class="form-group">
               Event type:
-              <select th:field="*{eventTypeDTO}">
-                <option th:each="type : ${allTypes}" th:value="${type.id}" th:text="${type.typeName}" class="form-control"></option>
-                <span th:if="${#fields.hasErrors('eventTypeDTO')}" th:errors="*{eventTypeDTO}"></span>
+              <select name="*{eventTypeDTO}" class="form-control">
+                <option th:each="type : ${allTypes}" th:value="${type}" th:text="${type.typeName}"></option>
               </select>
-              </p>
+              <span th:if="${#fields.hasErrors('eventTypeDTO')}" th:errors="*{eventTypeDTO}"></span>
             </div>
             <div>
               <button type="submit" class="btn btn-primary btn-block" value="Submit">Add event</button>
