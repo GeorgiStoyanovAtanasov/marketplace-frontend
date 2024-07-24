@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class OrganisationDTO {
     private Integer id;
-    private String name;
+    private String organisation_name;
 
 
 }
