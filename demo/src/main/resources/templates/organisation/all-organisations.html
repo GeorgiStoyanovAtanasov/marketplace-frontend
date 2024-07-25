@@ -58,12 +58,14 @@
             </thead>
             <tbody>
             <tr th:each="organisation : ${allOrganisations}">
+                <!-- Display the organisation name if the user has the USER role -->
                 <td th:text="${organisation.name}"></td>
-                <td class="text-center">
-                    <a class="btn btn-primary" th:href="@{'/organisation/update?id=' + ${organisation.id}}"
-                       role="button">Update</a>
+
+                <!-- Display update and delete buttons only if the user has the ADMIN role -->
+                <td class="text-center" th:if="${roles.contains('ADMIN')}">
+                    <a class="btn btn-primary" th:href="@{'/organisation/update?id=' + ${organisation.id}}" role="button">Update</a>
                 </td>
-                <td class="text-center">
+                <td class="text-center" th:if="${roles.contains('ADMIN')}">
                     <form th:action="@{'/organisation/delete?id=' + ${organisation.id}}" method="post">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>

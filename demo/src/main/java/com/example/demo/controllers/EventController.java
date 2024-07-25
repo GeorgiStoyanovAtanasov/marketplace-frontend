@@ -17,12 +17,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Controller
 public class EventController {
@@ -44,45 +51,58 @@ public class EventController {
         this.organisationClient = organisationClient;
     }
 
+    @GetMapping("/home")
+    public String home(Model model) {
+        authService.getRoles(model);
+        return "home";
+    }
+
     @GetMapping("/events")
     public String getAllEvents(Model model) {
-        try {
-            List<EventDTO> events = eventService.getAllEvents();
-            List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
+        List<EventDTO> events = eventService.getAllEvents();
+        List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
 
 
-            String token = authService.getToken();
-            List<String> roles = userClient.getRoles(token).getBody();
-            model.addAttribute("roles", roles);
-            model.addAttribute("allEvents", events);
-            model.addAttribute("allTypes", eventTypes);
+        authService.getRoles(model);
+
+        model.addAttribute("allEvents", events);
+        model.addAttribute("allTypes", eventTypes);
 
 
-            return "all-events";
-        } catch (FeignException.Forbidden e) {
-            return "redirect:/authentication/login";
-        }
+        return "all-events";
     }
 
     @GetMapping("/add")
     public String addEvent(Model model) {
+        authService.getRoles(model);
         List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
-        Iterable<Organisation> organisations = (Iterable<Organisation>) organisationClient.allOrganisations();
+        Iterable<Organisation> organisations = organisationClient.allOrganisations().getBody();
         model.addAttribute("eventDTO", new EventDTO());
         model.addAttribute("eventTypes", eventTypes);
-        model.addAttribute("organisations",organisations);
+        model.addAttribute("organisations", organisations);
         return "event/event-form";
     }
 
     @PostMapping("/submit")
-    public String postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult, Model model) throws ParseException {
+    public String postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult,
+                            @RequestParam(value = "organisationId", required = false) Integer organisationId,
+                            //@RequestParam("file") MultipartFile file,
+                            Model model) throws ParseException, IOException {
+
+       // eventDTO.setFile(file);
+        List<Organisation> organisations = (List<Organisation>) organisationClient.allOrganisations().getBody();
+        for (int i = 0; i < organisations.size(); i++) {
+            if (Objects.equals(organisationId, organisations.get(i).getId())) {
+                Organisation organisation = organisations.get(i);
+                eventDTO.setOrganisation(organisation);
+            }
+        }
         if (bindingResult.hasErrors()) {
+            authService.getRoles(model);
+            model.addAttribute("errors", bindingResult.getAllErrors());
             return "event/event-form";
-//        if (eventService.errorEventStatus(eventDTO)) {
-//            model.addAttribute("notValidDate", "Please enter a valid date!");
-//            return "event-form";
         } else {
-            eventClient.postEvent(eventDTO, bindingResult);
+            eventClient.postEvent(eventDTO);
             return "redirect:/events";
         }
     }
@@ -111,12 +131,11 @@ public class EventController {
     public String getEventDetails(@PathVariable String eventName, Model model) {
         return Optional.ofNullable(eventService.getEventDetails(eventName))
                 .map(eventDTO -> {
-                    String token = authService.getToken();
-                    List<String> roles = userClient.getRoles(token).getBody();
-                    if (roles != null) {
-                        model.addAttribute("roles", roles);
-                    }
+                    authService.getRoles(model);
+                    List<String> roles = (List<String>) model.getAttribute("roles");
+                    if (!roles.isEmpty()) {
                         model.addAttribute("alreadyApplied", eventService.isUserOnEvent(eventDTO));
+                    }
                     model.addAttribute("event", eventDTO);
                     return "event-details";
                 })
