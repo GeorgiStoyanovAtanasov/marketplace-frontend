@@ -48,25 +48,25 @@
 <header th:insert="~{header.html}"></header>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4">We work with organisations like:</h2> <!-- Added title -->
+    <h2 class="text-center mb-4">We work event types like:</h2> <!-- Added title -->
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
             <tr>
-                <th class="text-center" scope="col">Organisation</th>
+                <th class="text-center" scope="col">Event Type</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="organisation : ${allOrganisations}">
+            <tr th:each="eventType : ${eventTypes}">
                 <!-- Display the organisation name if the user has the USER role -->
-                <td th:text="${organisation.name}"></td>
+                <td th:text="${eventType.typeName}"></td>
 
                 <!-- Display update and delete buttons only if the user has the ADMIN role -->
                 <td class="text-center" th:if="${roles.contains('ADMIN')}">
-                    <a class="btn btn-primary" th:href="@{'/organisation/update?id=' + ${organisation.id}}" role="button">Update</a>
+                    <a class="btn btn-primary" th:href="@{'/event-type/update?id=' + ${eventType.id}}" role="button">Update</a>
                 </td>
                 <td class="text-center" th:if="${roles.contains('ADMIN')}">
-                    <form th:action="@{'/organisation/delete?id=' + ${organisation.id}}" method="post">
+                    <form th:action="@{'/event-type/delete?id=' + ${eventType.id}}" method="post">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </td>
