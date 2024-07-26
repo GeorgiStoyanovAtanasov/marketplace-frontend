@@ -1,29 +1,42 @@
 package com.example.demo;
 
+import com.example.demo.Services.AuthService;
 import com.example.demo.clients.EventClient;
+import com.example.demo.clients.OrganisationClient;
 import com.example.demo.clients.UserClient;
 import com.example.demo.dtos.EventDTO;
 import com.example.demo.dtos.EventTypeDTO;
+import com.example.demo.models.Organisation;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClientException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class EventService {
 
     private final EventClient eventClient;
     private final UserClient userClient;
+    private AuthService authService;
+    private OrganisationClient organisationClient;
 
     @Autowired
-    public EventService(EventClient eventClient, UserClient userClient) {
+    public EventService(EventClient eventClient, UserClient userClient, AuthService authService, OrganisationClient organisationClient) {
         this.eventClient = eventClient;
         this.userClient = userClient;
+        this.authService = authService;
+        this.organisationClient = organisationClient;
     }
 
     public List<EventDTO> getAllEvents() {
@@ -50,9 +63,24 @@ public class EventService {
 
     public List<EventTypeDTO> getAllEventTypes() {
         try {
+            // Call the API client to fetch event data
             Map<String, List<?>> response = eventClient.getEventsAndTypes().getBody();
-            return (List<EventTypeDTO>) response.get("eventTypes");
+
+            // Extract the list of event types from the response
+            List<?> eventTypeMaps = response.get("eventTypes");
+
+            // Initialize the ObjectMapper for conversion
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            // Convert the list of LinkedHashMaps to a list of EventTypeDTOs
+            List<EventTypeDTO> eventTypeDTOS = objectMapper.convertValue(
+                    eventTypeMaps,
+                    new TypeReference<List<EventTypeDTO>>() {}
+            );
+
+            return eventTypeDTOS;
         } catch (RestClientException e) {
+            // Handle the error when fetching event types from the API
             throw new RuntimeException("Error fetching event types from API", e);
         }
     }
@@ -89,5 +117,39 @@ public class EventService {
             }
         }
         return isUserOnEvent;
+    }
+    public String submitEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult,
+                              @RequestParam("organisationId") Integer organisationId,
+                              @RequestParam("eventTypeId") Integer eventTypeId,
+                              //@RequestParam("file") MultipartFile file,
+                              Model model){
+        List<Organisation> organisations = (List<Organisation>) organisationClient.allOrganisations().getBody();
+        for (int i = 0; i < organisations.size(); i++) {
+            if (Objects.equals(organisationId, organisations.get(i).getId())) {
+                Organisation organisation = organisations.get(i);
+                eventDTO.setOrganisation(organisation);
+            }
+        }
+        List<EventTypeDTO> eventTypeDTOS = getAllEventTypes();
+        for (int i = 0; i < eventTypeDTOS.size(); i++) {
+            if(Objects.equals(eventTypeId, eventTypeDTOS.get(i).getId())){
+                EventTypeDTO eventTypeDTO= eventTypeDTOS.get(i);
+                eventDTO.setEventTypeDTO(eventTypeDTO);
+            }
+        }
+        if(eventDTO.getOrganisation() == null){
+            return "token";
+        }
+        if(eventDTO.getEventTypeDTO() == null){
+            return "token";
+        }
+        if (bindingResult.hasErrors()) {
+            authService.getRoles(model);
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "event/event-form";
+        } else {
+            eventClient.postEvent(eventDTO);
+            return "redirect:/events";
+        }
     }
 }

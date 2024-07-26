@@ -85,26 +85,18 @@ public class EventController {
 
     @PostMapping("/submit")
     public String postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult,
-                            @RequestParam(value = "organisationId", required = false) Integer organisationId,
+                            @RequestParam("organisationId") Integer organisationId,
+                            @RequestParam("eventTypeId") Integer eventTypeId,
                             //@RequestParam("file") MultipartFile file,
                             Model model) throws ParseException, IOException {
 
        // eventDTO.setFile(file);
-        List<Organisation> organisations = (List<Organisation>) organisationClient.allOrganisations().getBody();
-        for (int i = 0; i < organisations.size(); i++) {
-            if (Objects.equals(organisationId, organisations.get(i).getId())) {
-                Organisation organisation = organisations.get(i);
-                eventDTO.setOrganisation(organisation);
-            }
-        }
-        if (bindingResult.hasErrors()) {
-            authService.getRoles(model);
-            model.addAttribute("errors", bindingResult.getAllErrors());
-            return "event/event-form";
-        } else {
-            eventClient.postEvent(eventDTO);
-            return "redirect:/events";
-        }
+        return eventService.submitEvent(eventDTO, bindingResult,
+                organisationId,
+                eventTypeId,
+                //@RequestParam("file") MultipartFile file,
+                model);
+
     }
 
     @GetMapping("/search")
@@ -162,6 +154,15 @@ public class EventController {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to apply for the event.");
             return "redirect:/events";
         }
+    }
+    @GetMapping("/event-types")
+    public String getAllEventTypes(Model model){
+        if(!authService.hasSession()){
+            return "redirect:/authentication/login";
+        }
+        authService.getRoles(model);
+        model.addAttribute("eventTypes", eventService.getAllEventTypes());
+        return "event-type/all-event-types";
     }
 }
 
