@@ -87,14 +87,14 @@ public class EventController {
     public String postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult,
                             @RequestParam("organisationId") Integer organisationId,
                             @RequestParam("eventTypeId") Integer eventTypeId,
-                            //@RequestParam("file") MultipartFile file,
+                            @RequestParam("file") MultipartFile file,
                             Model model) throws ParseException, IOException {
 
        // eventDTO.setFile(file);
         return eventService.submitEvent(eventDTO, bindingResult,
                 organisationId,
                 eventTypeId,
-                //@RequestParam("file") MultipartFile file,
+                file,
                 model);
 
     }
