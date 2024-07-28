@@ -60,12 +60,19 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public String logout(){
+    public String logout() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
+
+        // Retrieve the session; do not create a new one if it doesn't exist
         HttpSession session = request.getSession(false);
 
-        session.removeAttribute("session");
-        return "redirect:/authentication/login";
+        // Invalidate the session if it exists
+        if (session != null) {
+            session.invalidate();
+        }
+
+        // Redirect the user to the events page or wherever you'd like after logout
+        return "redirect:/events";
     }
 }

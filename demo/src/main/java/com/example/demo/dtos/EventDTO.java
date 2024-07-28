@@ -3,6 +3,7 @@ package com.example.demo.dtos;
 
 import com.example.demo.EventStatus;
 import com.example.demo.models.Organisation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class EventDTO {
     private double ticketPrice;
     @NotNull(message = "Please enter the capacity of the event!")
     private int capacity;
+    @JsonIgnore
     private MultipartFile file;
     private Organisation organisation;
     private EventTypeDTO eventTypeDTO;
