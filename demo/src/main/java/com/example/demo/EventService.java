@@ -18,7 +18,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -121,8 +124,8 @@ public class EventService {
     public String submitEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult,
                               @RequestParam("organisationId") Integer organisationId,
                               @RequestParam("eventTypeId") Integer eventTypeId,
-                              //@RequestParam("file") MultipartFile file,
-                              Model model){
+                              @RequestParam("file") MultipartFile file,
+                              Model model) throws IOException {
         List<Organisation> organisations = (List<Organisation>) organisationClient.allOrganisations().getBody();
         for (int i = 0; i < organisations.size(); i++) {
             if (Objects.equals(organisationId, organisations.get(i).getId())) {
@@ -137,12 +140,18 @@ public class EventService {
                 eventDTO.setEventTypeDTO(eventTypeDTO);
             }
         }
-        if(eventDTO.getOrganisation() == null){
+//        if(eventDTO.getOrganisation() == null){
+//            return "token";
+//        }
+//        if(eventDTO.getEventTypeDTO() == null){
+//            return "token";
+//        }
+        if(file == null){
             return "token";
         }
-        if(eventDTO.getEventTypeDTO() == null){
-            return "token";
-        }
+        byte[] fileBytes = file.getBytes();
+        String encodedImage = Base64.getEncoder().encodeToString(fileBytes);
+        eventDTO.setImage(encodedImage);
         if (bindingResult.hasErrors()) {
             authService.getRoles(model);
             model.addAttribute("errors", bindingResult.getAllErrors());

@@ -67,8 +67,8 @@
                             <span th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></span>
                         </div>
                         <div class="form-group">
-                            <!--              Photo:-->
-                            <!--              <input type="file" th:field="*{file}" accept="image/*">-->
+                            <label for="file">Choose image to upload:</label>
+                            <input type="file" name="file" id="file" class="form-control-file">
                         </div>
                         <div class="form-group">
                             <label for="organisationSelect">Organisation:</label>
