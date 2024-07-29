@@ -27,6 +27,7 @@ public class OrganisationController {
 
     @GetMapping("/add")
     public String addOrganisation(Model model) {
+        authService.getRoles(model);
         model.addAttribute("organisationDTO", new OrganisationDTO());
         return "organisation/organisation-form";
     }

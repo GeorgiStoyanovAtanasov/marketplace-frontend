@@ -110,7 +110,7 @@ public class EventController {
         try {
             List<EventDTO> events = eventService.getFilteredEvents(name, place, type, date, minPrice, maxPrice);
             List<EventTypeDTO> eventTypes = eventService.getFilteredEventTypes(name, place, type, date, minPrice, maxPrice);
-
+            authService.getRoles(model);
             model.addAttribute("allEvents", events);
             model.addAttribute("allTypes", eventTypes);
             return "all-events";
