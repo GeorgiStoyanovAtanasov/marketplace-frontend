@@ -12,6 +12,9 @@
         .navbar {
           background-color: #343a40; /* Dark background color */
         }
+        .white-text {
+        color: white;
+        }
 
         .navbar-brand {
           color: #fff; /* White text color */
@@ -60,11 +63,11 @@
             </div>
             <div class="ml-auto">
                 <!-- Check if roles list is not empty -->
-                <a class="nav-link active" th:if="${!#lists.isEmpty(roles)}" href="/profile">Profile</a>
+                <a class="nav-link active white text" th:if="${!#lists.isEmpty(roles)}" href="/profile">Profile</a>
 
                 <!-- Check if roles list is empty -->
-                <a class="nav-link active" th:if="${#lists.isEmpty(roles)}" href="/authentication/login">Sign In</a>
-                <a class="nav-link active" th:if="${#lists.isEmpty(roles)}" href="/user/register">Sign Up</a>
+                <a class="nav-link active white-text" th:if="${#lists.isEmpty(roles)}" href="/authentication/login">Sign In</a>
+                <a class="nav-link active white-text" th:if="${#lists.isEmpty(roles)}" href="/user/register">Sign Up</a>
             </div>
             <form th:action="@{/logout}" method="post" class="ml-3">
                 <!-- Check if roles list is not empty -->
