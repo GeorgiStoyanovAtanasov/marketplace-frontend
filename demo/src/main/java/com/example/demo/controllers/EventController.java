@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.EventPermission.EventPermission;
 import com.example.demo.Services.AuthService;
 import com.example.demo.Services.RoleService;
 import com.example.demo.clients.EventClient;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -59,7 +61,7 @@ public class EventController {
 
     @GetMapping("/events")
     public String getAllEvents(Model model) {
-        List<EventDTO> events = eventService.getAllEvents();
+        List<EventDTO> events = eventService.getAllEventsForShowing();
         List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
 
 
@@ -69,7 +71,33 @@ public class EventController {
         model.addAttribute("allTypes", eventTypes);
 
 
-        return "all-events";
+        return "event/all-events";
+    }
+
+    @GetMapping("/events-waiting")
+    public String getAllWaitingEvents(Model model) {
+        Map<String, List<?>> response = eventClient.getEventsAndTypes(EventPermission.WAITING).getBody();
+        List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
+
+
+        authService.getRoles(model);
+
+        model.addAttribute("allEvents", response.get("events"));
+        model.addAttribute("allTypes", eventTypes);
+
+        return "event/waiting-event";
+    }
+
+    @PostMapping("/event/accept")
+    public String accept(@RequestParam(name = "id") Integer id) {
+        eventClient.acceptEvent(id);
+        return "redirect:/events-waiting";
+    }
+
+    @PostMapping("/event/reject")
+    public String reject(@RequestParam(name = "id") Integer id) {
+        eventClient.rejectEvent(id);
+        return "redirect:/events-waiting";
     }
 
     @GetMapping("/add")
@@ -90,7 +118,7 @@ public class EventController {
                             @RequestParam("file") MultipartFile file,
                             Model model) throws ParseException, IOException {
 
-       // eventDTO.setFile(file);
+        // eventDTO.setFile(file);
         return eventService.submitEvent(eventDTO, bindingResult,
                 organisationId,
                 eventTypeId,
@@ -106,19 +134,39 @@ public class EventController {
                                     @RequestParam(name = "date", required = false) String date,
                                     @RequestParam(name = "minPrice", required = false) Double minPrice,
                                     @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+                                    @RequestParam(name = "eventPermission", required = false) EventPermission eventPermission,
                                     Model model) {
         try {
-            List<EventDTO> events = eventService.getFilteredEvents(name, place, type, date, minPrice, maxPrice);
-            List<EventTypeDTO> eventTypes = eventService.getFilteredEventTypes(name, place, type, date, minPrice, maxPrice);
+            List<EventDTO> events = eventService.getFilteredEvents(name, place, type, date, minPrice, maxPrice, eventPermission);
+            List<EventTypeDTO> eventTypes = eventService.getFilteredEventTypes(name, place, type, date, minPrice, maxPrice, eventPermission);
             authService.getRoles(model);
             model.addAttribute("allEvents", events);
             model.addAttribute("allTypes", eventTypes);
-            return "all-events";
+            return "event/all-events";
         } catch (FeignException.Forbidden e) {
             return "redirect:/authentication/login";
         }
     }
-
+    @GetMapping("/search/admin")
+    public String getFilteredEventsForAdmin(@RequestParam(name = "name", required = false) String name,
+                                    @RequestParam(name = "place", required = false) String place,
+                                    @RequestParam(name = "type", required = false) Integer type,
+                                    @RequestParam(name = "date", required = false) String date,
+                                    @RequestParam(name = "minPrice", required = false) Double minPrice,
+                                    @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+                                    @RequestParam(name = "eventPermission", required = false) EventPermission eventPermission,
+                                    Model model) {
+        try {
+            List<EventDTO> events = eventService.getFilteredEvents(name, place, type, date, minPrice, maxPrice, eventPermission);
+            List<EventTypeDTO> eventTypes = eventService.getFilteredEventTypes(name, place, type, date, minPrice, maxPrice, eventPermission);
+            authService.getRoles(model);
+            model.addAttribute("allEvents", events);
+            model.addAttribute("allTypes", eventTypes);
+            return "event/waiting-event";
+        } catch (FeignException.Forbidden e) {
+            return "redirect:/authentication/login";
+        }
+    }
     @GetMapping("/details/{eventName}")
     public String getEventDetails(@PathVariable String eventName, Model model) {
         return Optional.ofNullable(eventService.getEventDetails(eventName))
@@ -149,15 +197,18 @@ public class EventController {
         try {
             eventClient.apply(id);
             return "redirect:/events";
+        } catch (FeignException.Forbidden e){
+            return "redirect:/authentication/login";
         } catch (RuntimeException e) {
             // Add any attributes to be used after redirection if needed
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to apply for the event.");
             return "redirect:/events";
         }
     }
+
     @GetMapping("/event-types")
-    public String getAllEventTypes(Model model){
-        if(!authService.hasSession()){
+    public String getAllEventTypes(Model model) {
+        if (!authService.hasSession()) {
             return "redirect:/authentication/login";
         }
         authService.getRoles(model);

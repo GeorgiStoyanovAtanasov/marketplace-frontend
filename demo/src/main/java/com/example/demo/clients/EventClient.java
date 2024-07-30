@@ -1,5 +1,6 @@
 package com.example.demo.clients;
 
+import com.example.demo.EventPermission.EventPermission;
 import com.example.demo.dtos.EventDTO;
 import com.example.demo.IndividualFeignConfig;
 import jakarta.validation.Valid;
@@ -15,7 +16,7 @@ import java.util.Map;
 @FeignClient(name = "event-service", url = "${event-service.url}", configuration = IndividualFeignConfig.class)
 public interface EventClient {
     @GetMapping("/all")
-    ResponseEntity<Map<String, List<?>>> getEventsAndTypes();
+    ResponseEntity<Map<String, List<?>>> getEventsAndTypes(@RequestParam EventPermission eventPermission);
 
     @GetMapping("/{eventName}")
     ResponseEntity<Map<String, EventDTO>> getEventDetails(@PathVariable String eventName);
@@ -26,7 +27,8 @@ public interface EventClient {
             @RequestParam(name = "type", required = false) Integer type,
             @RequestParam(name = "date", required = false) String date,
             @RequestParam(name = "minPrice", required = false) Double minPrice,
-            @RequestParam(name = "maxPrice", required = false) Double maxPrice
+            @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+            @RequestParam(name = "eventPermission", required = false) EventPermission eventPermission
     );
     @DeleteMapping("/delete")
     void deleteEvent(@RequestParam("name") String name);
@@ -35,6 +37,11 @@ public interface EventClient {
 
     @PostMapping("/submit")
     public void postEvent(@RequestBody EventDTO eventDTO);
+    @PostMapping("/accept")
+    void acceptEvent(@RequestParam(name = "id") Integer id);
+    @PostMapping("/reject")
+    void rejectEvent(@RequestParam(name = "id") Integer id);
+
 }
 
 
