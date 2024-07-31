@@ -32,6 +32,7 @@ public interface EventClient {
     void deleteEvent(@RequestParam("name") String name);
     @PostMapping("/apply")
     void apply(@RequestParam(name = "id") Integer id);
+
     @PostMapping("/submit")
     boolean postEvent(@RequestBody EventDTO eventDTO);
 }
