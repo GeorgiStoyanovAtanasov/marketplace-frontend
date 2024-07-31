@@ -4,6 +4,7 @@ import com.example.demo.Services.AuthService;
 import com.example.demo.Services.OrganisationService;
 import com.example.demo.clients.OrganisationClient;
 import com.example.demo.dtos.OrganisationDTO;
+import feign.FeignException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,13 +43,36 @@ public class OrganisationController {
         }
     }
 
+    @GetMapping("/update/{id}")
+    public String updateForm(@PathVariable Integer id, Model model) {
+        model.addAttribute("updateOrganisation", new OrganisationDTO());
+        model.addAttribute("organisationId", id);
+        authService.getRoles(model);
+        return "organisation/organisation-update-form";
+    }
+
+    @PostMapping("/update")
+    public String postUpdate(@RequestParam("id")Integer id,@ModelAttribute OrganisationDTO organisationDTO){
+        organisationClient.postUpdatedOrganisation(id, organisationDTO);
+        return "redirect:/organisation/all";
+    }
+
     @GetMapping("/all")
     public String allOrganisations(Model model) {
-        if(!authService.hasSession()){
+        if (!authService.hasSession()) {
             return "redirect:/authentication/login";
         }
         authService.getRoles(model);
         model.addAttribute("allOrganisations", organisationService.allOrganisations());
         return "organisation/all-organisations";
+    }
+    @PostMapping("/delete/{id}")
+    public String deleteOrgById(@PathVariable Integer id) {
+        try {
+            organisationClient.deleteOrganisation(id);
+            return "redirect:/organisation/all";
+        } catch (FeignException.Forbidden e) {
+            return "redirect:/authentication/login";
+        }
     }
 }

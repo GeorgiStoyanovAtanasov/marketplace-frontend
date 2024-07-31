@@ -18,6 +18,12 @@ public interface OrganisationClient {
     @PostMapping("/submit")
     public void postOrganisation(@RequestBody OrganisationDTO organisationDTO);
 
+    @DeleteMapping("/delete")
+    void deleteOrganisation(@RequestParam("id") Integer id);
+
+    @PutMapping("/update")
+    void postUpdatedOrganisation(@RequestParam("id") Integer id, @RequestBody OrganisationDTO updatedOrganisation);
+
     @GetMapping("/all")
     ResponseEntity<Iterable<Organisation>> allOrganisations();
 }
