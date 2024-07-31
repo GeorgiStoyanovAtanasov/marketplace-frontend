@@ -33,7 +33,7 @@ public interface EventClient {
     @PostMapping("/apply")
     void apply(@RequestParam(name = "id") Integer id);
     @PostMapping("/submit")
-    void postEvent(@RequestBody EventDTO eventDTO);
+    boolean postEvent(@RequestBody EventDTO eventDTO);
 }
 
 

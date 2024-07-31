@@ -74,13 +74,13 @@ public class EventController {
 
     @GetMapping("/add")
     public String addEvent(Model model) {
-        authService.getRoles(model);
-        List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
-        Iterable<Organisation> organisations = organisationClient.allOrganisations().getBody();
-        model.addAttribute("eventDTO", new EventDTO());
-        model.addAttribute("eventTypes", eventTypes);
-        model.addAttribute("organisations", organisations);
-        return "event/event-form";
+            authService.getRoles(model);
+            List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
+            Iterable<Organisation> organisations = organisationClient.allOrganisations().getBody();
+            model.addAttribute("eventDTO", new EventDTO());
+            model.addAttribute("eventTypes", eventTypes);
+            model.addAttribute("organisations", organisations);
+            return "event/event-form";
     }
 
     @PostMapping("/submit")
