@@ -105,6 +105,7 @@
             <tbody>
             <tr th:each="organisation : ${allOrganisations}">
                 <td th:text="${organisation.name}"></td>
+
                 <td class="text-center">
                     <a class="btn btn-primary mr-2" th:href="@{'/organisation/update/' + ${organisation.id}}" role="button"><i class="fas fa-edit"></i> Update</a>
                     <th:block th:if="${roles.contains('ADMIN')}">
@@ -112,6 +113,7 @@
                             <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
                         </form>
                     </th:block>
+
                 </td>
             </tr>
             </tbody>
