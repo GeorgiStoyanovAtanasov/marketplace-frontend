@@ -44,8 +44,6 @@
                 <!-- Admin Role -->
                 <a th:if="${#lists.contains(roles, 'ADMIN')}" class="nav-link" href="/add">Add Event</a>
                 <a th:if="${#lists.contains(roles, 'ADMIN')}" class="nav-link" href="/event-types">All Event Types</a>
-                <a th:if="${#lists.contains(roles, 'ADMIN')}" class="nav-link" href="/organisation/add">Add Organisation</a>
-                <a th:if="${#lists.contains(roles, 'ADMIN')}" class="nav-link" href="/organisation/all">All Organisations</a>
 
                 <!-- Manager Role -->
                 <a th:if="${#lists.contains(roles, 'MANAGER')}" class="nav-link" href="/event/add">Add Event</a>
@@ -65,6 +63,7 @@
                 <!-- Check if roles list is empty -->
                 <a class="nav-link active" th:if="${#lists.isEmpty(roles)}" href="/authentication/login">Sign In</a>
                 <a class="nav-link active" th:if="${#lists.isEmpty(roles)}" href="/user/register">Sign Up</a>
+                <a class="nav-link active" th:if="${#lists.isEmpty(roles)}" href="/manager/register">Sign Up Manager</a>
             </div>
             <form th:action="@{/logout}" method="post" class="ml-3">
                 <!-- Check if roles list is not empty -->
