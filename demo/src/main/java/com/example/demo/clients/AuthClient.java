@@ -14,6 +14,6 @@ public interface AuthClient {
     @PostMapping("/login")
     ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto);
     @PostMapping("/register/user")
-    void register(@RequestBody RegisterUserDto registerUserDto);
+    boolean register(@RequestBody RegisterUserDto registerUserDto);
 
 }
