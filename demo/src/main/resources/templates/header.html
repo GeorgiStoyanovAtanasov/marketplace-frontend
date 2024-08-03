@@ -68,6 +68,7 @@
                 <!-- Check if roles list is empty -->
                 <a class="nav-link active white-text" th:if="${#lists.isEmpty(roles)}" href="/authentication/login">Sign In</a>
                 <a class="nav-link active white-text" th:if="${#lists.isEmpty(roles)}" href="/user/register">Sign Up</a>
+                <a class="nav-link active white-text" th:if="${#lists.isEmpty(roles)}" href="/manager/register">Sign Up Manager</a>
             </div>
             <form th:action="@{/logout}" method="post" class="ml-3">
                 <!-- Check if roles list is not empty -->
