@@ -63,7 +63,7 @@
 
                 <!-- Display update and delete buttons only if the user has the ADMIN role -->
                 <td class="text-center" th:if="${roles.contains('ADMIN')}">
-                    <a class="btn btn-primary" th:href="@{'/event-type/update?id=' + ${eventType.id}}" role="button">Update</a>
+                    <a class="btn btn-primary" th:href="@{/event-type/update/{id}(id=${eventType.id})}" role="button">Update</a>
                 </td>
                 <td class="text-center" th:if="${roles.contains('ADMIN')}">
                     <form th:action="@{'/event-type/delete?id=' + ${eventType.id}}" method="post">
