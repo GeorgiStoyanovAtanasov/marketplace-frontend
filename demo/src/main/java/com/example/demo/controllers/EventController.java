@@ -85,7 +85,7 @@ public class EventController {
         model.addAttribute("allEvents", response.get("events"));
         model.addAttribute("allTypes", eventTypes);
 
-        return "event/waiting-event";
+        return "event/waiting-events";
     }
 
     @PostMapping("/event/accept")

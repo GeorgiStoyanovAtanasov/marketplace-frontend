@@ -129,17 +129,17 @@
                         <p class="event-info">Date: <span th:text="${event.date}"></span></p>
                         <p class="event-info">Place: <span th:text="${event.place}"></span></p>
 
-                        <div th:if="${#lists.contains(roles, 'ADMIN')}">
+                        <div>
                         <form action="#" th:action="@{/event/accept}" method="post">
                             <input type="hidden" name="id" th:value="${event.id}">
                             <div class="button-container">
-                            <button type="submit" class="accept-button" value="Submit">Accept</button>
+                            <button type="submit" class="btn btn-success" value="Submit">Accept</button>
                             </div>
                         </form>
                         <form action="#" th:action="@{/event/reject}" method="post" >
                             <input type="hidden" name="id" th:value="${event.id}">
                             <div class="button-container">
-                            <button type="submit" class="accept-button" value="Submit">Reject</button>
+                            <button type="submit" class="btn btn-danger" value="Submit">Reject</button>
                             </div>
                         </form>
                     </div>
