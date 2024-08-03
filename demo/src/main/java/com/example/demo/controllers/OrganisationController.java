@@ -59,7 +59,7 @@ public class OrganisationController {
 
     @GetMapping("/all")
     public String allOrganisations(Model model) {
-        if (!authService.hasSession()) {
+        if(!authService.hasSession()){
             return "redirect:/authentication/login";
         }
         authService.getRoles(model);
