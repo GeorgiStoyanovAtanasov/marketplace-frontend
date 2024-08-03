@@ -129,7 +129,7 @@
                         <p class="event-info">Date: <span th:text="${event.date}"></span></p>
                         <p class="event-info">Place: <span th:text="${event.place}"></span></p>
 
-                        <div>
+                        <div th:if="${#lists.contains(roles, 'ADMIN')}">
                         <form action="#" th:action="@{/event/accept}" method="post">
                             <input type="hidden" name="id" th:value="${event.id}">
                             <div class="button-container">

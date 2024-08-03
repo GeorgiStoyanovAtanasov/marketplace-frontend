@@ -162,7 +162,7 @@ public class EventController {
             authService.getRoles(model);
             model.addAttribute("allEvents", events);
             model.addAttribute("allTypes", eventTypes);
-            return "event/waiting-event";
+            return "event/waiting-events";
         } catch (FeignException.Forbidden e) {
             return "redirect:/authentication/login";
         }
