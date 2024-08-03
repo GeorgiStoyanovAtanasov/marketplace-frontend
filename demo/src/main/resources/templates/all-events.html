@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:color="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>All Events</title>
@@ -11,6 +12,9 @@
             margin-bottom: 20px;
             padding: 20px;
             text-align: center; /* Center align the content */
+        }
+        .white-text {
+        color: white;
         }
         .event img {
             width: 100%; /* Ensure the image covers its container */
@@ -27,7 +31,7 @@
             margin-bottom: 5px;
         }
         .filter-section {
-            background-color: skyblue; /* Set sky-blue background color */
+            background: linear-gradient(135deg, #6e8efb, #a777e3); /* Set sky-blue background color */
             border: 1px solid #007bff;
             border-radius: 5px;
             padding: 20px;
@@ -52,29 +56,29 @@
     <div class="row">
         <div class="col-md-3">
             <div class="filter-section">
-                <h2>Filter</h2>
+                <h2 class="white-text">Filter</h2>
                 <form action="#" th:action="@{/search}" method="get">
                     <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" id="name" name="name">
+                        <label for="name" class="white-text">Name:</label>
+                        <input type="text" id="name" name="name" placeholder="Search event name" >
                     </div>
                     <div class="form-group">
-                        <label for="place">Place:</label>
-                        <input type="text" id="place" name="place">
+                        <label for="place" class="white-text">Place:</label>
+                        <input type="text" id="place" name="place" placeholder="Search event place" >
                     </div>
                     <div class="form-group">
-                        <label for="date">Date:</label>
-                        <input type="date" id="date" name="date">
+                        <label for="date" class="white-text">Date:</label>
+                        <input type="date" id="date" name="date" placeholder="Search event start date">
                     </div>
                     <div class="form-group">
-                        <label for="type">Type:</label>
+                        <label for="type" class="white-text">Type:</label>
                         <select id="type" name="type" class="form-control">
                             <option value="">All Types</option>
-                            <option th:each="type : ${allTypes}" th:value="${type.id}" th:text="${type.typeName}" class="form-control"></option>
+                            <option th:each="type : ${allTypes}" th:value="${type.id}" th:text="${type.typeName}" ></option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label >Price Range:</label>
+                        <label class="white-text">Price Range:</label>
                         <div class="input-group">
                             <input type="number" id="minPrice" name="minPrice" class="form-control" placeholder="Min">
                             <input type="number" id="maxPrice" name="maxPrice" class="form-control" placeholder="Max">
