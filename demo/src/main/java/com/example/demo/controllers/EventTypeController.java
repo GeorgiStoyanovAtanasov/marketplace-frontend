@@ -1,9 +1,11 @@
 package com.example.demo.controllers;
 
-import ch.qos.logback.core.model.Model;
+import com.example.demo.Services.AuthService;
+import com.example.demo.clients.EventTypeClient;
 import com.example.demo.dtos.EventTypeDTO;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,14 +14,29 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/event-type")
 public class EventTypeController {
-    @GetMapping("/add")
-    public void addEventType(Model model) {
+    AuthService authService;
+    EventTypeClient eventTypeClient;
 
+    public EventTypeController(AuthService authService, EventTypeClient eventTypeClient) {
+        this.authService = authService;
+        this.eventTypeClient = eventTypeClient;
     }
 
-    @PostMapping("/add")
-    public void postEventType(@Valid @ModelAttribute EventTypeDTO eventTypeDTO) {
+    @GetMapping("/add")
+    public String addEventType(Model model) {
+        authService.getRoles(model);
+        model.addAttribute("eventTypeDTO", new EventTypeDTO());
+        return "event-type/event-type-form";
+    }
 
+    @PostMapping("/submit")
+    public String postEventType(@Valid @ModelAttribute EventTypeDTO eventTypeDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "event-type/event-type-form";
+        }else {
+            eventTypeClient.postEventType(eventTypeDTO);
+            return "redirect:/events";
+        }
     }
 
     @GetMapping("/all")

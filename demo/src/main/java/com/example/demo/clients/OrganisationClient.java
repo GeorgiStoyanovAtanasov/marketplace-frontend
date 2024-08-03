@@ -18,7 +18,7 @@ import java.util.Map;
 @FeignClient(name = "organisation-service", url = "${organisation-service.url}", configuration = IndividualFeignConfig.class)
 public interface OrganisationClient {
     @PostMapping("/submit")
-    public void postOrganisation(@RequestBody OrganisationDTO organisationDTO);
+     void postOrganisation(@RequestBody OrganisationDTO organisationDTO);
 
     @DeleteMapping("/delete")
     void deleteOrganisation(@RequestParam("id") Integer id);
