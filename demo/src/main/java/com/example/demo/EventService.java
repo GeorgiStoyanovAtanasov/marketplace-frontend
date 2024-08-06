@@ -21,10 +21,10 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.*;
 
 @Service
 public class EventService {
@@ -157,8 +157,11 @@ public class EventService {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "event/event-form";
         } else {
-            eventClient.postEvent(eventDTO);
+            if(!eventClient.postEvent(eventDTO)) {
+                return "redirect:/add";
+            }
             return "redirect:/events";
+
         }
     }
 }
