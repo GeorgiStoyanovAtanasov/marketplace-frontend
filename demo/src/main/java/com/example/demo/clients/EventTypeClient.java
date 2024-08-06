@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "event-type-service", url = "${event-type-service.url}", configuration = IndividualFeignConfig.class)
 public interface EventTypeClient {
-    @PostMapping("/add")
+    @PostMapping("/submit")
     void postEventType(@RequestBody EventTypeDTO eventTypeDTO);
 
     @GetMapping("/all")
