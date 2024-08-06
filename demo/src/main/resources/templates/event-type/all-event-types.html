@@ -109,6 +109,7 @@
                 <td th:text="${eventType.typeName}"></td>
 
                 <td class="text-center" th:if="${roles.contains('ADMIN')}">
+
                     <a class="btn btn-primary mr-2" th:href="@{'/event-type/update/' + ${eventType.id}}"
                        role="button"><i class="fas fa-edit"></i> Update</a>
                     <th:block>

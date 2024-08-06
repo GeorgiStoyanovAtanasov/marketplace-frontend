@@ -23,18 +23,21 @@ public class OrganisationController {
         this.organisationService = organisationService;
     }
     @GetMapping("/add")
-    public String addOrganisation(Model model) {
-        authService.getRoles(model);
+    public String addOrganisation(@ModelAttribute("id") Integer id, Model model) {
         model.addAttribute("organisationDTO", new OrganisationDTO());
+        model.addAttribute("id", id);
         return "organisation/organisation-form";
     }
+
     @PostMapping("/submit")
-    public String postOrganisation(@Valid @ModelAttribute OrganisationDTO organisationDTO, BindingResult bindingResult) {
+    public String postOrganisation(@Valid @ModelAttribute OrganisationDTO organisationDTO,@RequestParam(name = "id") Integer id, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "organisation/organisation-form";
         } else {
-            organisationClient.postOrganisation(organisationDTO);
-            return "redirect:/events";
+            if(!organisationClient.postOrganisation(organisationDTO,id)){
+                return "organisation/organisation-form";
+            }
+            return "redirect:/authentication/login";
         }
     }
 
@@ -54,9 +57,6 @@ public class OrganisationController {
 
     @GetMapping("/all")
     public String allOrganisations(Model model) {
-            if (!authService.hasSession()) {
-                return "redirect:/authentication/login";
-            }
             authService.getRoles(model);
             model.addAttribute("allOrganisations", organisationService.allOrganisations());
             return "organisation/all-organisations";
