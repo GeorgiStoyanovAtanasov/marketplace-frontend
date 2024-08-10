@@ -84,6 +84,7 @@
             margin: 0;
             font-size: 1em; /* Ensure footer text is readable */
         }
+
     </style>
 </head>
 <body>
@@ -92,25 +93,30 @@
 </header>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4" th:if="${#lists.contains(roles, 'MANAGER') or #lists.contains(roles, 'USER')}">We work with organisations like:</h2>
+    <h2 class="text-center mb-4" th:if="${#lists.contains(roles, 'MANAGER') or #lists.contains(roles, 'USER')}">We work
+        with organisations like:</h2>
     <h2 class="text-center mb-4" th:if="${#lists.contains(roles, 'ADMIN')}">Organisations</h2>
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover">
             <thead>
             <tr>
-                <th class="text-center" scope="col">Organisation</th>
+                <th class="text-center" scope="col">Event Type</th>
                 <th class="text-center" th:if="${roles.contains('ADMIN')}" scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="organisation : ${allOrganisations}">
-                <td th:text="${organisation.name}"></td>
+            <tr th:each="eventType : ${eventTypes}">
+                <td th:text="${eventType.typeName}"></td>
 
                 <td class="text-center" th:if="${roles.contains('ADMIN')}">
-                    <a class="btn btn-primary mr-2" th:href="@{'/organisation/update/' + ${organisation.id}}" role="button"><i class="fas fa-edit"></i> Update</a>
-                    <th:block >
-                        <form th:action="@{'/organisation/delete/' + ${organisation.id}}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+
+                    <a class="btn btn-primary mr-2" th:href="@{'/event-type/update/' + ${eventType.id}}"
+                       role="button"><i class="fas fa-edit"></i> Update</a>
+                    <th:block>
+                        <form th:action="@{'/event-type/delete/' + ${eventType.id}}" method="post"
+                              style="display:inline;">
+                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete
+                            </button>
                         </form>
                     </th:block>
 
