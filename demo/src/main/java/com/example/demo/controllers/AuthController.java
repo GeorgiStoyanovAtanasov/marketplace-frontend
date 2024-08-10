@@ -61,9 +61,8 @@ public class AuthController {
 
             String token = authClient.authenticate(loginUserDto).getBody().getToken();
             httpSession.setAttribute("session", token);
-
             return "redirect:/events";
-        } catch (Exception e) {
+        } catch (Exception e){
             return "redirect:/authentication/login";
         }
     }
@@ -82,7 +81,7 @@ public class AuthController {
         }
 
         // Redirect the user to the events page or wherever you'd like after logout
-        return "redirect:/events";
+        return "redirect:/home";
     }
 
     @GetMapping("/manager/register")

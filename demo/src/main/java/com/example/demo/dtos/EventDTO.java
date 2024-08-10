@@ -1,6 +1,7 @@
 package com.example.demo.dtos;
 
 
+import com.example.demo.EventPermission.EventPermission;
 import com.example.demo.EventStatus;
 import com.example.demo.models.Organisation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,7 +36,8 @@ public class EventDTO {
     private Organisation organisation;
     private EventTypeDTO eventTypeDTO;
     private EventStatus eventStatus;
-    List<UserDTO>users;
+    private List<UserDTO>users;
+    private EventPermission eventPermission;
 
 }
 
