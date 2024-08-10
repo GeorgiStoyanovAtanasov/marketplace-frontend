@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.EventService;
 import com.example.demo.Services.AuthService;
 import com.example.demo.clients.EventTypeClient;
 import com.example.demo.dtos.EventTypeDTO;
@@ -10,18 +11,21 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/event-type")
 public class EventTypeController {
-    AuthService authService;
-    EventTypeClient eventTypeClient;
+   private AuthService authService;
+   private EventTypeClient eventTypeClient;
+   private EventService eventService;
 
-
-    public EventTypeController(AuthService authService, EventTypeClient eventTypeClient) {
+    @Autowired
+    public EventTypeController(AuthService authService, EventTypeClient eventTypeClient, EventService eventService) {
         this.authService = authService;
         this.eventTypeClient = eventTypeClient;
+        this.eventService = eventService;
     }
 
     @GetMapping("/add")
@@ -42,7 +46,10 @@ public class EventTypeController {
     }
 
     @GetMapping("/all")
-    public String allEventsTypes() {
+    public String allEventsTypes(Model model) {
+        List<EventTypeDTO> allEventTypes = eventService.getAllEventTypes();
+        model.addAttribute("eventTypes", allEventTypes);
+        authService.getRoles(model);
         return "event-type/all-event-types";
     }
 
