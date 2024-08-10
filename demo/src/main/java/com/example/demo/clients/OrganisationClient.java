@@ -19,6 +19,7 @@ import java.util.Map;
 public interface OrganisationClient {
     @PostMapping("/submit")
     boolean postOrganisation(@RequestBody OrganisationDTO organisationDTO,@RequestParam Integer id);
+
     @DeleteMapping("/delete")
     void deleteOrganisation(@RequestParam("id") Integer id);
 

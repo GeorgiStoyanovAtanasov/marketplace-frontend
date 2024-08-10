@@ -67,7 +67,7 @@
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </div>
-                    <div th:if="${roles.contains('User') || roles.contains('USER') || roles.contains('ROLE_USER') || roles.contains('Admin') || roles.contains('ADMIN') || roles.contains('ROLE_ADMIN')}">
+                    <div>
                         <form th:unless="${alreadyApplied}" th:action="@{'/apply/' + ${event.id}}" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-primary" style="background-color: blue; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px;">Apply</button>
                         </form>

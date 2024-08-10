@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.EventPermission.EventPermission;
 import com.example.demo.Services.AuthService;
 import com.example.demo.clients.EventClient;
 import com.example.demo.clients.OrganisationClient;
@@ -21,10 +22,10 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.*;
 
 @Service
 public class EventService {
@@ -42,22 +43,24 @@ public class EventService {
         this.organisationClient = organisationClient;
     }
 
-    public List<EventDTO> getAllEvents() {
+    public List<EventDTO> getAllEventsForShowing() {
         try {
-            Map<String, List<?>> response = eventClient.getEventsAndTypes().getBody();
+            Map<String, List<?>> response = eventClient.getEventsAndTypes(EventPermission.ACCEPT).getBody();
             return (List<EventDTO>) response.get("events");
         } catch (RestClientException e) {
             throw new RuntimeException("Error fetching events from API", e);
         }
     }
+
     public List<EventDTO> getFilteredEvents(@RequestParam(name = "name", required = false) String name,
                                             @RequestParam(name = "place", required = false) String place,
                                             @RequestParam(name = "type", required = false) Integer type,
                                             @RequestParam(name = "date", required = false) String date,
                                             @RequestParam(name = "minPrice", required = false) Double minPrice,
-                                            @RequestParam(name = "maxPrice", required = false) Double maxPrice) {
+                                            @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+                                            @RequestParam(name = "eventPermission", required = false) EventPermission eventPermission) {
         try {
-            Map<String, List<?>> response = eventClient.searchEvents(name, place, type, date, minPrice, maxPrice).getBody();
+            Map<String, List<?>> response = eventClient.searchEvents(name, place, type, date, minPrice, maxPrice, eventPermission).getBody();
             return (List<EventDTO>) response.get("events");
         } catch (RestClientException e) {
             throw new RuntimeException("Error fetching events from API", e);
@@ -67,7 +70,7 @@ public class EventService {
     public List<EventTypeDTO> getAllEventTypes() {
         try {
             // Call the API client to fetch event data
-            Map<String, List<?>> response = eventClient.getEventsAndTypes().getBody();
+            Map<String, List<?>> response = eventClient.getEventsAndTypes(EventPermission.ACCEPT).getBody();
 
             // Extract the list of event types from the response
             List<?> eventTypeMaps = response.get("eventTypes");
@@ -92,9 +95,10 @@ public class EventService {
                                                     @RequestParam(name = "type", required = false) Integer type,
                                                     @RequestParam(name = "date", required = false) String date,
                                                     @RequestParam(name = "minPrice", required = false) Double minPrice,
-                                                    @RequestParam(name = "maxPrice", required = false) Double maxPrice) {
+                                                    @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+                                                    @RequestParam(name = "eventPermission", required = false) EventPermission eventPermission) {
         try {
-            Map<String, List<?>> response = eventClient.searchEvents(name, place, type, date, minPrice, maxPrice).getBody();
+            Map<String, List<?>> response = eventClient.searchEvents(name, place, type, date, minPrice, maxPrice, eventPermission).getBody();
             return (List<EventTypeDTO>) response.get("eventTypes");
         } catch (RestClientException e) {
             throw new RuntimeException("Error fetching event types from API", e);
@@ -157,8 +161,11 @@ public class EventService {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "event/event-form";
         } else {
-            eventClient.postEvent(eventDTO);
+            if(!eventClient.postEvent(eventDTO)) {
+                return "redirect:/add";
+            }
             return "redirect:/events";
+
         }
     }
 }

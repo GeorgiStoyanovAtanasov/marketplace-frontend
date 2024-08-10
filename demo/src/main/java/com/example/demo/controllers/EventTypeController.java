@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import com.example.demo.EventService;
 import com.example.demo.Services.AuthService;
-import com.example.demo.clients.EventClient;
 import com.example.demo.clients.EventTypeClient;
 import com.example.demo.dtos.EventTypeDTO;
 import jakarta.validation.Valid;
@@ -30,13 +29,20 @@ public class EventTypeController {
     }
 
     @GetMapping("/add")
-    public void addEventType(Model model) {
-
+    public String addEventType(Model model) {
+        authService.getRoles(model);
+        model.addAttribute("eventTypeDTO", new EventTypeDTO());
+        return "event-type/event-type-form";
     }
 
-    @PostMapping("/add")
-    public void postEventType(@Valid @ModelAttribute EventTypeDTO eventTypeDTO) {
-
+    @PostMapping("/submit")
+    public String postEventType(@Valid @ModelAttribute EventTypeDTO eventTypeDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "event-type/event-type-form";
+        }else {
+            eventTypeClient.postEventType(eventTypeDTO);
+            return "redirect:/events";
+        }
     }
 
     @GetMapping("/all")
