@@ -18,7 +18,7 @@ public interface EventTypeClient {
     ResponseEntity<Iterable<EventTypeDTO>> allEventTypes();
 
     @DeleteMapping("/delete")
-    void deleteEventType(@RequestParam("id") Integer id);
+    ResponseEntity<Void> deleteEventType(@RequestParam("id") Integer id);
 
     @PutMapping("/update")
     void updateEventType(@RequestParam("id") Integer id, @RequestBody EventTypeDTO eventTypeDTO);
