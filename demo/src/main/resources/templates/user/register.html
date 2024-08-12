@@ -72,6 +72,22 @@
 .btn:hover {
     opacity: 0.9;
 }
+
+.error-container {
+    margin-top: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8d7da; /* Light red background */
+    border: 1px solid #f5c6cb; /* Red border */
+    color: #721c24; /* Dark red text */
+}
+
+.error-message {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
     </style>
 </head>
 <body>
@@ -84,12 +100,10 @@
                     <div class="form-group">
                         <label for="email">Email:</label>
                         <input type="email" th:field="*{email}" class="form-control" id="email"
-                               placeholder="Enter your email address">
-                        <div class="error-container" th:if="${#fields.hasErrors('email')}">
-                            <span class="error-message" th:errors="*{email}"></span>
-                        </div>
-                        <div class="error-container" th:if="${emailExistMessage}">
-                            <span class="error-message" th:text="${emailExistMessage}"></span>
+                               placeholder="Enter your email address"/>
+                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                        <div class="error-container" th:if="${emailExist != null and emailExist != ''}">
+                            <span class="error-message" th:text="${emailExist}"></span>
                         </div>
                     </div>
 
@@ -115,8 +129,8 @@
                         <div class="error-container" th:if="${#fields.hasErrors('confirmPassword')}">
                             <span class="error-message" th:errors="*{confirmPassword}"></span>
                         </div>
-                        <div class="error-container" th:if="${passwordsDoNotMatch}">
-                            <span class="error-message" th:text="${passwordsDoNotMatch}"></span>
+                        <div class="error-container" th:if="${passwordNotMatch != null and passwordNotMatch != ''}">
+                            <span class="error-message" th:text="${passwordNotMatch}"></span>
                         </div>
                     </div>
                         <button type="submit" class="btn">Register</button>
