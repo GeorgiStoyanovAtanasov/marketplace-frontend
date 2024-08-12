@@ -114,4 +114,5 @@ public class OrganisationController {
         organisationClient.rejectOrganisation(id);
         return "redirect:/organisation/search/admin";
     }
+
 }
