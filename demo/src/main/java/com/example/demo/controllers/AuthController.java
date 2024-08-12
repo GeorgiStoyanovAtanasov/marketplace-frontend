@@ -96,7 +96,6 @@ public class AuthController {
             return "redirect:/manager/register";
         }
         ManagerDTO managerDTO = managerClient.registerManager(registerUserDto).getBody();
-        redirectAttributes.addFlashAttribute("id", managerDTO.getId());
-        return "redirect:/organisation/add";
+        return "redirect:/authentication/login";
     }
 }

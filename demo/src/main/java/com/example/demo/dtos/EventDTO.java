@@ -1,13 +1,12 @@
 package com.example.demo.dtos;
 
 
-import com.example.demo.EventPermission.EventPermission;
+import com.example.demo.enums.EventPermission;
 import com.example.demo.EventStatus;
 import com.example.demo.models.Organisation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,0 +1,39 @@
+<!-- Thymeleaf Template: organisation-management.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Metadata and styles omitted for brevity -->
+</head>
+<body>
+<header th:insert="~{header.html}">
+    <h1>Organisation Management</h1>
+</header>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Organisations</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Organisation</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="organisation : ${allOrganisations}">
+                <td th:text="${organisation.name}"></td>
+                <td class="text-center">
+                    <form th:action="@{'/organisation/accept?id=' + ${organisation.id}}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-success">Accept</button>
+                    </form>
+                    <form th:action="@{'/organisation/reject?id=' + ${organisation.id}}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

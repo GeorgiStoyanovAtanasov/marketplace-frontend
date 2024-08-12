@@ -1,6 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.EventPermission.EventPermission;
+import com.example.demo.enums.EventPermission;
 import com.example.demo.Services.AuthService;
 import com.example.demo.Services.RoleService;
 import com.example.demo.clients.EventClient;
@@ -26,12 +26,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Controller
 public class EventController {

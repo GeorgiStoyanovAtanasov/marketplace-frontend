@@ -1,4 +1,4 @@
-package com.example.demo.EventPermission;
+package com.example.demo.enums;
 
 public enum EventPermission {
     ACCEPT,
