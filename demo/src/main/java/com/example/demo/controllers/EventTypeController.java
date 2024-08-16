@@ -4,6 +4,7 @@ import com.example.demo.EventService;
 import com.example.demo.Services.AuthService;
 import com.example.demo.clients.EventTypeClient;
 import com.example.demo.dtos.EventTypeDTO;
+import feign.FeignException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,9 +54,14 @@ public class EventTypeController {
         return "event-type/all-event-types";
     }
 
-    @DeleteMapping("/delete")
-    public void deleteEventType(@RequestParam("id") Integer id) {
-
+    @PostMapping("/delete/{id}")
+    public String deleteEventType(@PathVariable("id") Integer id) {
+        try {
+            eventTypeClient.deleteEventType(id);
+            return "redirect:/event-type/all";
+        } catch (FeignException.Forbidden e) {
+            return "redirect:/authentication/login";
+        }
     }
 
     @GetMapping("/update/{id}")
