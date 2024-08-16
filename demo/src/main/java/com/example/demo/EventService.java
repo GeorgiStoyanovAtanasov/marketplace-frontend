@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.EventPermission.EventPermission;
+import com.example.demo.enums.EventPermission;
 import com.example.demo.Services.AuthService;
 import com.example.demo.clients.EventClient;
 import com.example.demo.clients.OrganisationClient;
@@ -22,9 +22,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service

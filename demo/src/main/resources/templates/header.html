@@ -49,7 +49,9 @@
                 <a th:if="${#lists.contains(roles, 'ADMIN')}" class="nav-link" href="/event-type/all">All Event Types</a>
                 <a th:if="${#lists.contains(roles, 'ADMIN')}" class="nav-link" href="/organisation/add">Add Organisation</a>
                 <a th:if="${#lists.contains(roles, 'ADMIN')}" class="nav-link" href="/organisation/all">All Organisations</a>
+                <a th:if="${#lists.contains(roles, 'MANAGER')}" class="nav-link" href="/organisation/info">My organisation</a>
                 <a th:if="${#lists.contains(roles, 'ADMIN')}" class="nav-link" href="/events-waiting">Events for admin</a>
+                <a th:if="${#lists.contains(roles, 'ADMIN')}" class="nav-link" href="/organisation/search/admin">Organisations for admin</a>
                 <!-- Manager Role -->
                 <a th:if="${#lists.contains(roles, 'MANAGER')}" class="nav-link" href="/event/add">Add Event</a>
 
