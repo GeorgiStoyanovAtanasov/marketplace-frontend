@@ -39,6 +39,8 @@ public interface EventClient {
     void acceptEvent(@RequestParam(name = "id") Integer id);
     @PostMapping("/reject")
     void rejectEvent(@RequestParam(name = "id") Integer id);
+    @GetMapping("/organisation")
+    List<EventDTO> getEventsForOrganisation();
 }
 
 

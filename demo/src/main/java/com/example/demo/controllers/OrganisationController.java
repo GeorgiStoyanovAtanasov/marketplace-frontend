@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.Services.AuthService;
 import com.example.demo.Services.OrganisationService;
+import com.example.demo.clients.EventClient;
 import com.example.demo.clients.ManagerClient;
 import com.example.demo.clients.OrganisationClient;
 import com.example.demo.dtos.OrganisationDTO;
@@ -25,13 +26,15 @@ public class OrganisationController {
     OrganisationClient organisationClient;
     OrganisationService organisationService;
     ManagerClient managerClient;
+    EventClient eventClient;
 
     @Autowired
-    public OrganisationController(AuthService authService, OrganisationClient organisationClient, OrganisationService organisationService, ManagerClient managerClient) {
+    public OrganisationController(AuthService authService, OrganisationClient organisationClient, OrganisationService organisationService, ManagerClient managerClient, EventClient eventClient) {
         this.authService = authService;
         this.organisationClient = organisationClient;
         this.organisationService = organisationService;
         this.managerClient = managerClient;
+        this.eventClient = eventClient;
     }
     @GetMapping("/info")
     public String getOrganisationInfo(Model model){
@@ -40,6 +43,8 @@ public class OrganisationController {
         if(organisation == null){
             return "redirect:/organisation/add";
         }
+        model.addAttribute("organisation", organisation);
+        model.addAttribute("events", eventClient.getEventsForOrganisation());
         return "organisation/organisation-info";
     }
 
@@ -114,5 +119,4 @@ public class OrganisationController {
         organisationClient.rejectOrganisation(id);
         return "redirect:/organisation/search/admin";
     }
-
 }
