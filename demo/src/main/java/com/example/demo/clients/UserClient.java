@@ -13,7 +13,8 @@ import java.util.List;
 
 @FeignClient(name = "user-service", url = "${user-service.url}", configuration = IndividualFeignConfig.class)
 public interface UserClient {
-
+    @GetMapping("/me")
+    UserDTO authenticatedUser();
     @GetMapping("/roles")
     ResponseEntity<List<String>> getRoles(@RequestParam("token") String token);
     @GetMapping("/email")

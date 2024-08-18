@@ -65,7 +65,7 @@
             </div>
             <div class="ml-auto">
                 <!-- Check if roles list is not empty -->
-                <a class="nav-link active white-text" th:if="${!#lists.isEmpty(roles)}" href="/user/profile">Profile</a>
+                <a class="nav-link active white-text" th:if="${!#lists.isEmpty(roles)}" href="/users/me">Profile</a>
 
                 <!-- Check if roles list is empty -->
                 <a class="nav-link active white-text" th:if="${#lists.isEmpty(roles)}" href="/authentication/login">Sign In</a>
