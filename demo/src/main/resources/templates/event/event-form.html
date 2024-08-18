@@ -71,14 +71,19 @@
                             <input type="file" name="file" id="file" class="form-control-file">
                         </div>
                         <div class="form-group">
-                            <label for="organisationSelect">Organisation:</label>
-                            <select id="organisationSelect" name="organisationId" class="form-control">
-                                <option value="">Select an organisation</option>
-                                <option th:each="organisation : ${organisations}"
-                                        th:value="${organisation.id}"
-                                        th:text="${organisation.name}">
-                                </option>
-                            </select>
+                            <!-- Label and select box only for ADMIN users -->
+                            <div th:if="${#lists.contains(roles, 'ADMIN')}">
+                                <label for="organisationSelect">Organisation:</label>
+                                <select id="organisationSelect" name="organisationId" class="form-control">
+                                    <option value="">Select an organisation</option>
+                                    <option th:each="organisation : ${organisations}"
+                                            th:value="${organisation.id}"
+                                            th:text="${organisation.name}">
+                                    </option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="organisationId" th:if="${#lists.contains(roles, 'MANAGER') and !#lists.contains(roles, 'ADMIN')}"
+                                   th:value="${organisation.id}">
                             <span th:if="${#fields.hasErrors('organisation')}" th:errors="*{organisation}"
                                   class="text-danger"></span>
                         </div>

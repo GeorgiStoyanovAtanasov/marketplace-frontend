@@ -16,24 +16,39 @@ import java.util.List;
 @Service
 public class AuthService {
     UserClient userClient;
+
     @Autowired
-    public AuthService(UserClient userClient){
+    public AuthService(UserClient userClient) {
         this.userClient = userClient;
     }
 
-    public void getRoles(Model model){
+    public void getRoles(Model model) {
         List<String> roles = new ArrayList<>();
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         HttpSession session = request.getSession(false);
         model.addAttribute("roles", roles);
-        if(session != null) {
+        if (session != null) {
             String token = (String) session.getAttribute("session");
             roles = userClient.getRoles(token).getBody();
             model.addAttribute("roles", roles);
         }
     }
-    public boolean hasSession(){
+
+    public List<String> getAuthorities() {
+        List<String> roles = new ArrayList<>();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            return null;
+        }
+        String token = (String) session.getAttribute("session");
+        roles = userClient.getRoles(token).getBody();
+        return roles;
+    }
+
+    public boolean hasSession() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         HttpSession session = request.getSession(false);

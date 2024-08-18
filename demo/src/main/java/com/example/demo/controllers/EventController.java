@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.clients.ManagerClient;
 import com.example.demo.enums.EventPermission;
 import com.example.demo.Services.AuthService;
 import com.example.demo.Services.RoleService;
@@ -37,15 +38,17 @@ public class EventController {
     private AuthService authService;
     private EventClient eventClient;
     private OrganisationClient organisationClient;
+    private ManagerClient managerClient;
 
     @Autowired
-    public EventController(EventService eventService, RoleService roleService, UserClient userClient, AuthService authService, EventClient eventClient, OrganisationClient organisationClient) {
+    public EventController(EventService eventService, RoleService roleService, UserClient userClient, AuthService authService, EventClient eventClient, OrganisationClient organisationClient, ManagerClient managerClient) {
         this.eventService = eventService;
         this.roleService = roleService;
         this.userClient = userClient;
         this.authService = authService;
         this.eventClient = eventClient;
         this.organisationClient = organisationClient;
+        this.managerClient = managerClient;
     }
 
     @GetMapping("/home")
@@ -97,14 +100,28 @@ public class EventController {
 
     @GetMapping("/add")
     public String addEvent(Model model) {
-            authService.getRoles(model);
-            List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
+        authService.getRoles(model);
+        List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
+        List<String> roles = authService.getAuthorities();
+
+        if (roles.contains("ADMIN")) {
             Iterable<Organisation> organisations = organisationClient.allOrganisations().getBody();
-            model.addAttribute("eventDTO", new EventDTO());
-            model.addAttribute("eventTypes", eventTypes);
             model.addAttribute("organisations", organisations);
-            return "event/event-form";
+        } else if (roles.contains("MANAGER")) {
+            Organisation organisation = managerClient.findOrganisationByManager().getBody();
+            if (organisation != null) {
+                model.addAttribute("organisation", organisation);
+            } else {
+                return "redirect:/organisation/add";
+            }
+        }
+
+        model.addAttribute("eventDTO", new EventDTO());
+        model.addAttribute("eventTypes", eventTypes);
+
+        return "event/event-form";
     }
+
 
     @PostMapping("/submit")
     public String postEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult,
@@ -142,15 +159,16 @@ public class EventController {
             return "redirect:/authentication/login";
         }
     }
+
     @GetMapping("/search/admin")
     public String getFilteredEventsForAdmin(@RequestParam(name = "name", required = false) String name,
-                                    @RequestParam(name = "place", required = false) String place,
-                                    @RequestParam(name = "type", required = false) Integer type,
-                                    @RequestParam(name = "date", required = false) String date,
-                                    @RequestParam(name = "minPrice", required = false) Double minPrice,
-                                    @RequestParam(name = "maxPrice", required = false) Double maxPrice,
-                                    @RequestParam(name = "eventPermission", required = false) EventPermission eventPermission,
-                                    Model model) {
+                                            @RequestParam(name = "place", required = false) String place,
+                                            @RequestParam(name = "type", required = false) Integer type,
+                                            @RequestParam(name = "date", required = false) String date,
+                                            @RequestParam(name = "minPrice", required = false) Double minPrice,
+                                            @RequestParam(name = "maxPrice", required = false) Double maxPrice,
+                                            @RequestParam(name = "eventPermission", required = false) EventPermission eventPermission,
+                                            Model model) {
         try {
             List<EventDTO> events = eventService.getFilteredEvents(name, place, type, date, minPrice, maxPrice, eventPermission);
             List<EventTypeDTO> eventTypes = eventService.getFilteredEventTypes(name, place, type, date, minPrice, maxPrice, eventPermission);
@@ -162,6 +180,7 @@ public class EventController {
             return "redirect:/authentication/login";
         }
     }
+
     @GetMapping("/details/{eventName}")
     public String getEventDetails(@PathVariable String eventName, Model model) {
         return Optional.ofNullable(eventService.getEventDetails(eventName))
@@ -192,7 +211,7 @@ public class EventController {
         try {
             eventClient.apply(id);
             return "redirect:/events";
-        } catch (FeignException.Forbidden e){
+        } catch (FeignException.Forbidden e) {
             return "redirect:/authentication/login";
         } catch (RuntimeException e) {
             // Add any attributes to be used after redirection if needed
