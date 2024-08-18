@@ -19,5 +19,8 @@ public interface UserClient {
     ResponseEntity<List<String>> getRoles(@RequestParam("token") String token);
     @GetMapping("/email")
     ResponseEntity<String> getEmail();
+
+    @GetMapping("/findByEmail")
+    boolean ifEmailExist(@RequestParam String email);
 }
 
