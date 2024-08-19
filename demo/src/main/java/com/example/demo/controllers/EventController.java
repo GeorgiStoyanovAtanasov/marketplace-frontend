@@ -186,11 +186,20 @@ public class EventController {
         return Optional.ofNullable(eventService.getEventDetails(eventName))
                 .map(eventDTO -> {
                     authService.getRoles(model);
-                    List<String> roles = (List<String>) model.getAttribute("roles");
+                    List<String> roles = authService.getAuthorities();
                     if (!roles.isEmpty()) {
                         model.addAttribute("alreadyApplied", eventService.isUserOnEvent(eventDTO));
                     }
+                    if (roles.contains("MANAGER")) {
+                        Organisation organisation = managerClient.findOrganisationByManager().getBody();
+                        if (eventDTO.getOrganisation().equals(organisation)) {
+                            model.addAttribute("edit", true);
+                        }
+                    }
                     model.addAttribute("event", eventDTO);
+                    if(Boolean.FALSE.equals(eventClient.getIsEventOver(eventDTO).getBody())){
+                        model.addAttribute("apply", true);
+                    }
                     return "event-details";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
@@ -214,10 +223,44 @@ public class EventController {
         } catch (FeignException.Forbidden e) {
             return "redirect:/authentication/login";
         } catch (RuntimeException e) {
-            // Add any attributes to be used after redirection if needed
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to apply for the event.");
             return "redirect:/events";
         }
+    }
+
+    @GetMapping("/event/update/form")
+    public String updateEventForm(@RequestParam("id") Integer id, Model model) {
+        authService.getRoles(model);
+        List<EventTypeDTO> eventTypes = eventService.getAllEventTypes();
+        List<String> roles = authService.getAuthorities();
+
+        if (roles.contains("ADMIN")) {
+            Iterable<Organisation> organisations = organisationClient.allOrganisations().getBody();
+            model.addAttribute("organisations", organisations);
+        } else if (roles.contains("MANAGER")) {
+            Organisation organisation = managerClient.findOrganisationByManager().getBody();
+            if (organisation != null) {
+                model.addAttribute("organisation", organisation);
+            } else {
+                return "redirect:/organisation/add";
+            }
+        }
+        EventDTO eventDTO = eventClient.getEventDTOById(id);
+        model.addAttribute("eventDTO", eventDTO);
+        model.addAttribute("eventTypes", eventTypes);
+        model.addAttribute("id", id);
+
+        return "event/event-update-form";
+    }
+
+    @PostMapping("/update/submit")
+    public String submitEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult,
+                              @RequestParam("organisationId") Integer organisationId,
+                              @RequestParam("eventTypeId") Integer eventTypeId,
+                              @RequestParam("file") MultipartFile file,
+                              Model model, @RequestParam("id") Integer id) throws IOException {
+        eventDTO.setId(id);
+        return eventService.updateEvent(eventDTO, bindingResult, organisationId, eventTypeId, file, model);
     }
 
     @GetMapping("/event-types")

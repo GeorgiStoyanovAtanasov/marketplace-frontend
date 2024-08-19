@@ -41,6 +41,12 @@ public interface EventClient {
     void rejectEvent(@RequestParam(name = "id") Integer id);
     @GetMapping("/organisation")
     List<EventDTO> getEventsForOrganisation();
+    @PostMapping("/update")
+    boolean updateEvent(@RequestBody EventDTO eventDTO);
+    @GetMapping("/id")
+    EventDTO getEventDTOById(@RequestParam("id") Integer id);
+    @PostMapping("/over")
+    ResponseEntity<Boolean> getIsEventOver(@RequestBody EventDTO eventDTO);
 }
 
 

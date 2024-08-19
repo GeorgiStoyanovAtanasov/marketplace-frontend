@@ -165,4 +165,47 @@ public class EventService {
 
         }
     }
+    public String updateEvent(@Valid @ModelAttribute EventDTO eventDTO, BindingResult bindingResult,
+                              @RequestParam("organisationId") Integer organisationId,
+                              @RequestParam("eventTypeId") Integer eventTypeId,
+                              @RequestParam("file") MultipartFile file,
+                              Model model) throws IOException {
+        List<Organisation> organisations = (List<Organisation>) organisationClient.allOrganisations().getBody();
+        for (int i = 0; i < organisations.size(); i++) {
+            if (Objects.equals(organisationId, organisations.get(i).getId())) {
+                Organisation organisation = organisations.get(i);
+                eventDTO.setOrganisation(organisation);
+            }
+        }
+        List<EventTypeDTO> eventTypeDTOS = getAllEventTypes();
+        for (int i = 0; i < eventTypeDTOS.size(); i++) {
+            if(Objects.equals(eventTypeId, eventTypeDTOS.get(i).getId())){
+                EventTypeDTO eventTypeDTO= eventTypeDTOS.get(i);
+                eventDTO.setEventTypeDTO(eventTypeDTO);
+            }
+        }
+//        if(eventDTO.getOrganisation() == null){
+//            return "token";
+//        }
+//        if(eventDTO.getEventTypeDTO() == null){
+//            return "token";
+//        }
+        if(file == null){
+            return "token";
+        }
+        byte[] fileBytes = file.getBytes();
+        String encodedImage = Base64.getEncoder().encodeToString(fileBytes);
+        eventDTO.setImage(encodedImage);
+        if (bindingResult.hasErrors()) {
+            authService.getRoles(model);
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/event/update/form";
+        } else {
+            if(!eventClient.updateEvent(eventDTO)) {
+                return "redirect:/event/update/form";
+            }
+            return "redirect:/events";
+
+        }
+    }
 }

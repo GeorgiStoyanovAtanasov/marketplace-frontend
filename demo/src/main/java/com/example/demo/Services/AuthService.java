@@ -11,6 +11,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -41,7 +42,7 @@ public class AuthService {
         HttpServletRequest request = attributes.getRequest();
         HttpSession session = request.getSession(false);
         if(session == null){
-            return null;
+            return Collections.emptyList();
         }
         String token = (String) session.getAttribute("session");
         roles = userClient.getRoles(token).getBody();
